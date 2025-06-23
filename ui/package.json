@@ -1,0 +1,61 @@
+{
+  "name": "bank-of-begonia-ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ticket-based banking system for carnivals - React Frontend",
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "css-loader": "^7.1.2",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.1",
+    "react-scripts": "5.0.1",
+    "socket.io-client": "^4.8.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "author": "Bank of Begonia Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/bank-of-begonia"
+  },
+  "proxy": "http://73.194.0.103:3001",
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.0",
+    "ansi-html-community": "^0.0.8",
+    "autoprefixer": "^10.4.21",
+    "babel-loader": "^10.0.0",
+    "html-webpack-plugin": "^5.6.3",
+    "postcss-preset-env": "^10.2.3",
+    "webpack-dev-server": "^5.2.2"
+  }
+}

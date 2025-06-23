@@ -1,0 +1,32 @@
+{
+  "name": "bank-of-begonia-backend",
+  "version": "1.0.0",
+  "description": "Ticket-based banking system for carnivals - Backend API",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "start:prod": "node index.js",
+    "init": "node scripts/init-data.js"
+  },
+  "keywords": [
+    "carnival",
+    "tickets",
+    "banking",
+    "express",
+    "socket.io"
+  ],
+  "author": "Bank of Begonia Team",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}
