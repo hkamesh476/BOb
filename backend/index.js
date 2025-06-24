@@ -5,12 +5,13 @@ const path = require('path');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://73.194.0.103:3000"],
+    origin: ["http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -18,7 +19,7 @@ const io = new Server(server, {
 
 // Enable CORS for all routes
 app.use(cors({
-  origin: ["http://localhost:3000", "http://73.194.0.103:3000"],
+  origin: ["http://localhost:3000"],
   credentials: true
 }));
 
@@ -117,7 +118,7 @@ function getCodeInfo(code) {
 }
 
 // Registration route
-app.post('/api/register', (req, res) => {
+app.post('/api/register', async (req, res) => {
   const { firstName, lastName, email, phone, password } = req.body;
   if (!firstName || !lastName || !password || (!email && !phone)) {
     return res.status(400).json({ error: 'All fields are required.' });
@@ -129,13 +130,14 @@ app.post('/api/register', (req, res) => {
   if (phone && users.find(u => u.phone === phone)) {
     return res.status(409).json({ error: 'Phone already registered.' });
   }
+  const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = {
     id: Date.now().toString(),
     firstName,
     lastName,
     email,
     phone,
-    password, // NOTE: In production, hash passwords!
+    password: hashedPassword,
     role: 'buyer',
     confirmed: true
   };
@@ -145,11 +147,15 @@ app.post('/api/register', (req, res) => {
 });
 
 // Login route
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { email, phone, password } = req.body;
   const users = readUsers();
-  const user = users.find(u => ((email && u.email === email) || (phone && u.phone === phone)) && u.password === password);
+  const user = users.find(u => (email && u.email === email) || (phone && u.phone === phone));
   if (!user) {
+    return res.status(401).json({ error: 'Invalid credentials.' });
+  }
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) {
     return res.status(401).json({ error: 'Invalid credentials.' });
   }
   res.json({ message: 'Login successful.', user: { ...user, password: undefined } });

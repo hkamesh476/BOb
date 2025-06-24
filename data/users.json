@@ -4,7 +4,7 @@
     "firstName": "Admin",
     "lastName": "User",
     "email": "admin@example.com",
-    "password": "adminpass1",
+    "password": "$2a$10$w7Qw8Qw8Qw8Qw8Qw8Qw8QeQw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Q",
     "role": "admin",
     "confirmed": true
   }

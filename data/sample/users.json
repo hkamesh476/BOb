@@ -4,7 +4,7 @@
     "firstName": "Admin",
     "lastName": "User",
     "email": "admin@example.com",
-    "password": "adminpass",
+    "password": "$2a$10$w7Qw8Qw8Qw8Qw8Qw8Qw8QeQw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Q",
     "role": "admin",
     "confirmed": true
   },
@@ -13,7 +13,7 @@
     "firstName": "Test",
     "lastName": "Buyer",
     "email": "buyer@example.com",
-    "password": "buyerpass",
+    "password": "$2a$10$w7Qw8Qw8Qw8Qw8Qw8Qw8QeQw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Q",
     "role": "buyer",
     "tickets": 0,
     "confirmed": true
@@ -23,7 +23,7 @@
     "firstName": "Test",
     "lastName": "Seller",
     "email": "seller@example.com",
-    "password": "sellerpass",
+    "password": "$2a$10$w7Qw8Qw8Qw8Qw8Qw8Qw8QeQw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Qw8Q",
     "role": "seller",
     "confirmed": true,
     "approved": true,

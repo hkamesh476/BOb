@@ -48,7 +48,6 @@
     "type": "git",
     "url": "https://github.com/yourusername/bank-of-begonia"
   },
-  "proxy": "http://73.194.0.103:3001",
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.0",
     "ansi-html-community": "^0.0.8",
