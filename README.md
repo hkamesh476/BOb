@@ -55,19 +55,21 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
    ```bash
    npm start
    ```
-   Server will run on http://localhost:3001
+   Server will run on http://127.0.0.1:3001
 
 2. Start the frontend (in the ui directory):
    ```bash
    npm start
    ```
-   Application will open in your browser at http://localhost:3000
+   Application will open in your browser at http://127.0.0.1:3000
 
 3. (Optional) Start the Flask frontend (in the flask_frontend directory):
    ```bash
    python app.py
    ```
-   Flask frontend will run on http://localhost:3000
+   Flask frontend will run on http://127.0.0.1:3000
+
+   ⚠️ Note: Only one frontend (React or Flask) can run on port 3000 at a time. Stop one before starting the other.
 
 ## Usage Guide
 
@@ -93,13 +95,13 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 
 ```
 bank-of-begonia/
-├── backend/             # Express server
+├── backend/             # Express server (Node.js backend)
 │   ├── index.js        # Server entry point
 │   └── package.json    # Backend dependencies
 ├── ui/                 # React frontend
 │   ├── src/            # React source code
 │   └── package.json    # Frontend dependencies
-├── flask_frontend/     # Optional Flask frontend
+├── flask_frontend/     # Optional Flask frontend (do not run with React at the same time)
 │   └── app.py          # Flask app
 └── data/               # JSON data storage
     ├── users.json      # User accounts
@@ -108,6 +110,14 @@ bank-of-begonia/
     ├── sellerCodes.json # Seller codes
     └── sellerNames.json # Seller code display names
 ```
+
+All backup and deleted folders have been removed for a clean workspace.
+## Troubleshooting
+
+- If you see CORS errors or cannot connect, make sure you are using `http://127.0.0.1` (not `localhost`) in both backend and frontend.
+- Only one frontend (React or Flask) can run on port 3000 at a time.
+- If you get an error about a port being in use, stop the other server or change the port.
+
 
 ## Tech Stack
 
