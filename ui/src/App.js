@@ -955,7 +955,15 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <AppContent />
+      <>
+        {/* Logo at the top of every page */}
+        <div style={{ background: '#fff', borderBottom: '1px solid #eee', marginBottom: 24 }}>
+          <div style={{ maxWidth: 600, margin: '0 auto' }}>
+            <img src={process.env.PUBLIC_URL + '/BOB picture.png'} alt="Bank of Begonia Logo" style={{ maxWidth: 120, height: 'auto', margin: '1.5rem auto 0.5rem', display: 'block' }} />
+          </div>
+        </div>
+        <AppContent />
+      </>
     </Router>
   );
 }

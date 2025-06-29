@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img src="ui/public/BOB picture.png" alt="Bank of Begonia Logo" width="180" />
+</p>
+
 # Bank of Begonia
 
 A ticket-based mini banking system for carnivals and events. Built with Node.js, Express, React, and Flask.
