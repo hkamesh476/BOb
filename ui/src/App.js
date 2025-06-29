@@ -407,6 +407,20 @@ function AppContent() {
       justifyContent: 'center',
       padding: '20px'
     }}>
+      <img 
+        src={process.env.PUBLIC_URL + '/BOB picture.png'} 
+        alt="Bank of Begonia Logo" 
+        style={{
+          display: 'block',
+          margin: '0 auto 30px auto',
+          width: 120,
+          maxWidth: '80%',
+          borderRadius: 12,
+          boxShadow: '0 2px 8px #ccc',
+          background: '#fff',
+          padding: 4
+        }}
+      />
       <h1 style={{ color: 'white', marginBottom: '30px', textShadow: '2px 2px 4px rgba(0,0,0,0.2)' }}>
         Welcome to Bank of Begonia
       </h1>
@@ -956,12 +970,23 @@ function App() {
   return (
     <Router>
       <>
-        {/* Logo at the top of every page */}
-        <div style={{ background: '#fff', borderBottom: '1px solid #eee', marginBottom: 24 }}>
-          <div style={{ maxWidth: 600, margin: '0 auto' }}>
-            <img src={process.env.PUBLIC_URL + '/BOB picture.png'} alt="Bank of Begonia Logo" style={{ maxWidth: 120, height: 'auto', margin: '1.5rem auto 0.5rem', display: 'block' }} />
-          </div>
-        </div>
+        {/* Logo fixed in the top-right corner of every page */}
+        <img 
+          src={process.env.PUBLIC_URL + '/BOB picture.png'} 
+          alt="Bank of Begonia Logo" 
+          style={{
+            position: 'fixed',
+            top: 16,
+            right: 16,
+            width: 64,
+            height: 'auto',
+            zIndex: 1000,
+            borderRadius: 12,
+            boxShadow: '0 2px 8px #ccc',
+            background: '#fff',
+            padding: 4
+          }}
+        />
         <AppContent />
       </>
     </Router>
