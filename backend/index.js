@@ -5,7 +5,6 @@ const path = require('path');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
-const bcrypt = require('bcryptjs');
 
 const app = express();
 const server = http.createServer(app);
@@ -117,6 +116,14 @@ function getCodeInfo(code) {
   return { code };
 }
 
+// --- Plaintext password system ---
+function customHash(password, index) {
+  return password;
+}
+function customVerify(password, index, hash) {
+  return password === hash;
+}
+
 // Registration route
 app.post('/api/register', async (req, res) => {
   const { firstName, lastName, email, phone, password } = req.body;
@@ -130,14 +137,14 @@ app.post('/api/register', async (req, res) => {
   if (phone && users.find(u => u.phone === phone)) {
     return res.status(409).json({ error: 'Phone already registered.' });
   }
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const id = Date.now().toString();
   const newUser = {
-    id: Date.now().toString(),
+    id,
     firstName,
     lastName,
     email,
     phone,
-    password: hashedPassword,
+    password: password,
     role: 'buyer',
     confirmed: true
   };
@@ -154,8 +161,7 @@ app.post('/api/login', async (req, res) => {
   if (!user) {
     return res.status(401).json({ error: 'Invalid credentials.' });
   }
-  const match = await bcrypt.compare(password, user.password);
-  if (!match) {
+  if (password !== user.password) {
     return res.status(401).json({ error: 'Invalid credentials.' });
   }
   res.json({ message: 'Login successful.', user: { ...user, password: undefined } });
@@ -327,6 +333,67 @@ app.post('/api/buyer/spend', (req, res) => {
 // Prevent sellers from spending their own tickets
 app.post('/api/seller/spend', (req, res) => {
   res.status(403).json({ error: 'Sellers cannot spend tickets.' });
+});
+
+// --- Promote user to admin ---
+app.post('/api/admin/promote', (req, res) => {
+  const { email, phone } = req.body;
+  // Use passwords.json for lookup
+  const PASSWORDS_FILE = path.join(__dirname, '../flask_frontend/passwords.json');
+  let passwordData = [];
+  try {
+    passwordData = JSON.parse(fs.readFileSync(PASSWORDS_FILE, 'utf-8'));
+  } catch (e) {
+    return res.status(500).json({ error: 'Could not read passwords.json' });
+  }
+  let found = null;
+  if (email) {
+    found = passwordData.find(u => (u.email && u.email.toLowerCase() === email.toLowerCase()));
+  } else if (phone) {
+    found = passwordData.find(u => (u.phone && u.phone === phone));
+  }
+  if (!found) return res.status(404).json({ error: 'User not found in passwords.json.' });
+
+  // Now update users.json to promote
+  const users = readUsers();
+  let user = null;
+  if (email) {
+    user = users.find(u => (u.email && u.email.toLowerCase() === email.toLowerCase()));
+  } else if (phone) {
+    user = users.find(u => (u.phone && u.phone === phone));
+  }
+  if (!user) return res.status(404).json({ error: 'User not found in users.json.' });
+  user.role = 'admin';
+  writeUsers(users);
+  res.json({ message: 'User promoted to admin.' });
+});
+
+// --- Forgot password: send code to admin and allow reset ---
+let resetCodes = {};
+app.post('/api/forgot-password', (req, res) => {
+  const { email } = req.body;
+  const users = readUsers();
+  const user = users.find(u => u.email === email);
+  if (!user) return res.status(404).json({ error: 'User not found.' });
+  // Generate 3-digit code
+  const code = Math.floor(100 + Math.random() * 900).toString();
+  resetCodes[email] = code;
+  // For demo: log to console, in production send to admin
+  console.log(`Password reset code for ${email}: ${code}`);
+  res.json({ message: 'Reset code sent to admin.' });
+});
+app.post('/api/reset-password', (req, res) => {
+  const { email, code, newPassword } = req.body;
+  if (!resetCodes[email] || resetCodes[email] !== code) {
+    return res.status(400).json({ error: 'Invalid or expired code.' });
+  }
+  const users = readUsers();
+  const user = users.find(u => u.email === email);
+  if (!user) return res.status(404).json({ error: 'User not found.' });
+  user.password = newPassword;
+  writeUsers(users);
+  delete resetCodes[email];
+  res.json({ message: 'Password reset successful.' });
 });
 
 // Placeholder: Add routes for admin actions, ticket generation, etc.

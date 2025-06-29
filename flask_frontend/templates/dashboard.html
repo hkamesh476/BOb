@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Bank of Begonia</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; }
+        .container { max-width: 500px; margin: 60px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #43c6ac55; padding: 32px; text-align: center; }
+        h1 { color: #7366bd; margin-bottom: 24px; }
+        .info { font-size: 20px; margin-bottom: 24px; }
+        .actions { margin: 24px 0; }
+        .btn { display: inline-block; margin: 12px 8px; padding: 12px 32px; border-radius: 6px; border: none; font-size: 18px; font-weight: 600; cursor: pointer; transition: background 0.2s; background: #7366bd; color: #fff; }
+        .btn-logout { background: #f7786b; }
+        .btn:hover { opacity: 0.9; }
+        .tickets { font-size: 22px; color: #43c6ac; font-weight: bold; margin-bottom: 16px; }
+        .form-section { background: #f5f6fa; border-radius: 8px; padding: 18px 16px; margin: 18px 0; box-shadow: 0 2px 8px #43c6ac22; }
+        form { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+        input[type="text"], input[type="number"] { padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 16px; outline: none; transition: border 0.2s; width: 80%; max-width: 260px; }
+        input[type="text"]:focus, input[type="number"]:focus { border: 1.5px solid #7366bd; }
+        button[type="submit"] { background: #43c6ac; color: #fff; border: none; border-radius: 6px; padding: 10px 24px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+        button[type="submit"]:hover { background: #7366bd; }
+        .msg-success { color: #43c6ac; font-weight: 500; margin-bottom: 8px; }
+        .msg-error { color: #f7786b; font-weight: 500; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dashboard</h1>
+        <div class="info">
+            Welcome, <b>{{ user.firstName }}</b> ({{ user.role|capitalize }})
+        </div>
+        {% if spend_success %}<div class="msg-success">{{ spend_success }}</div>{% endif %}
+        {% if spend_error %}<div class="msg-error">{{ spend_error }}</div>{% endif %}
+        {% if grant_success %}<div class="msg-success">{{ grant_success }}</div>{% endif %}
+        {% if grant_error %}<div class="msg-error">{{ grant_error }}</div>{% endif %}
+        {% if sellername_success %}<div class="msg-success">{{ sellername_success }}</div>{% endif %}
+        {% if sellername_error %}<div class="msg-error">{{ sellername_error }}</div>{% endif %}
+        {% if user.role == 'buyer' %}
+            <div class="tickets">🎟️ Tickets: {{ user.tickets or 0 }}</div>
+            <div class="actions">
+                <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
+            </div>
+            <div class="form-section">
+                <form method="post" action="{{ url_for('spend_tickets') }}">
+                    <input type="text" name="code" placeholder="Seller Code" required>
+                    <input type="number" name="amount" placeholder="Amount" min="1" required>
+                    <button type="submit">Spend Tickets</button>
+                </form>
+            </div>
+        {% elif user.role == 'seller' %}
+            <div class="tickets">💰 Tickets earned: {{ user.tickets or 0 }}</div>
+            <div class="actions">
+                <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
+            </div>
+        {% elif user.role == 'admin' %}
+            <div class="actions">
+                <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
+            </div>
+            <div class="form-section">
+                <h3>Promote User to Admin</h3>
+                <form method="post" action="{{ url_for('promote_admin') }}">
+                    <input type="text" name="email" placeholder="User Email" required>
+                    <button type="submit">Promote</button>
+                </form>
+            </div>
+            <div class="form-section">
+                <h3>Seller Names & Codes</h3>
+                <div id="seller-names">
+                    {% if seller_names %}
+                        <table style="width:100%;margin-top:10px;">
+                            <tr><th>Seller Code</th><th>Seller Name</th></tr>
+                            {% for code, name in seller_names.items() %}
+                                <tr>
+                                    <td>{{ code }}</td>
+                                    <td>{{ name }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <p>No seller names available.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-section">
+                <h3>Set Seller Name</h3>
+                <form method="post" action="{{ url_for('set_seller_name') }}">
+                    <input type="text" name="code" placeholder="Seller Code" required>
+                    <input type="text" name="name" placeholder="Seller Name" required>
+                    <button type="submit">Set Seller Name</button>
+                </form>
+            </div>
+            <div class="form-section">
+                <h3>Grant Tickets to Buyer</h3>
+                <form method="post" action="{{ url_for('grant_tickets') }}">
+                    <input type="text" name="buyer_contact" placeholder="Buyer Email or Phone" required>
+                    <input type="number" name="amount" placeholder="Amount" min="1" required>
+                    <button type="submit">Grant Tickets</button>
+                </form>
+            </div>
+            <div class="form-section">
+                <h3>Seller Earnings</h3>
+                <div id="seller-earnings">
+                    {% if seller_earnings %}
+                        <table style="width:100%;margin-top:10px;">
+                            <tr><th>Seller Name</th><th>Code</th><th>Earnings</th></tr>
+                            {% for seller in seller_earnings %}
+                                <tr>
+                                    <td>{{ seller.name }}</td>
+                                    <td>{{ seller.code }}</td>
+                                    <td>{{ seller.earnings }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% else %}
+                        <p>No seller earnings data available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+    </div>
+</body>
+</html>

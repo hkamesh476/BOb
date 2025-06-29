@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank of Begonia - Home</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; }
+        .container { max-width: 400px; margin: 80px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #43c6ac55; padding: 32px; text-align: center; }
+        h1 { color: #7366bd; margin-bottom: 32px; }
+        .btn { display: inline-block; margin: 12px 8px; padding: 12px 32px; border-radius: 6px; border: none; font-size: 18px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-login { background: #7366bd; color: #fff; }
+        .btn-register { background: #ffc300; color: #fff; }
+        .btn-trans { background: #f7786b; color: #fff; }
+        .btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Bank of Begonia</h1>
+        <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
+        <a href="{{ url_for('register') }}" class="btn btn-register">Register</a>
+        <a href="{{ url_for('transactions') }}" class="btn btn-trans">Transactions</a>
+    </div>
+</body>
+</html>

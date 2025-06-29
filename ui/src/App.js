@@ -152,7 +152,7 @@ function AppContent() {
     e.preventDefault();
     setMessage('');
     setPendingSpend({
-      code: spend.sellerEmail.toUpperCase().trim(), // always send code in correct field, uppercased and trimmed
+      code: spend.code.toUpperCase().trim(), // always send code in correct field, uppercased and trimmed
       amount: spend.amount
     });
   };
@@ -670,8 +670,8 @@ function AppContent() {
                     list="predetermined-codes"
                     style={{ padding: 12, borderRadius: 8, border: '1px solid #43c6ac', marginRight: 12, fontSize: 18, width: 180 }} 
                     placeholder="Enter 2-character code (letters or numbers)" 
-                    value={spend.sellerEmail}
-                    onChange={e => setSpend({ ...spend, sellerEmail: e.target.value.toUpperCase().trim() })}
+                    value={spend.code}
+                    onChange={e => setSpend({ ...spend, code: e.target.value.toUpperCase().trim() })}
                     pattern="[A-Z0-9]{2}"
                     maxLength={2}
                     required 
@@ -681,9 +681,9 @@ function AppContent() {
                       <option key={code} value={code} />
                     ))}
                   </datalist>
-                  {spend.sellerEmail && codeToSeller[spend.sellerEmail.toUpperCase()] && codeToSeller[spend.sellerEmail.toUpperCase()].trim() && (
+                  {spend.code && codeToSeller[spend.code.toUpperCase()] && codeToSeller[spend.code.toUpperCase()].trim() && (
                     <span style={{ marginLeft: 12, color: '#43c6ac', fontWeight: 600, fontSize: 16, minWidth: 120, display: 'inline-block' }}>
-                      Seller: {codeToSeller[spend.sellerEmail.toUpperCase()]}
+                      Seller: {codeToSeller[spend.code.toUpperCase()]}
                     </span>
                   )}
                 </div>
@@ -705,10 +705,10 @@ function AppContent() {
               {pendingSpend && (
                 <div style={{ marginTop: 24, background: '#fffbe6', border: '1px solid #ffe58f', borderRadius: 12, padding: 24, fontSize: 18 }}>
                   <div style={{ marginBottom: 12 }}>
-                    Confirm spending <b>{pendingSpend.amount}</b> tickets using seller code <b>{pendingSpend.sellerEmail}</b>
-                    {pendingSpend.sellerEmail && codeToSeller[pendingSpend.sellerEmail.toUpperCase()] && codeToSeller[pendingSpend.sellerEmail.toUpperCase()].trim() && (
+                    Confirm spending <b>{pendingSpend.amount}</b> tickets using seller code <b>{pendingSpend.code}</b>
+                    {pendingSpend.code && codeToSeller[pendingSpend.code.toUpperCase()] && codeToSeller[pendingSpend.code.toUpperCase()].trim() && (
                       <span style={{ marginLeft: 12, color: '#43c6ac', fontWeight: 600 }}>
-                        (Seller: {codeToSeller[pendingSpend.sellerEmail.toUpperCase()]})
+                        (Seller: {codeToSeller[pendingSpend.code.toUpperCase()]})
                       </span>
                     )}
                     ?
