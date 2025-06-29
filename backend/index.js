@@ -1,6 +1,6 @@
 // Entry point for the Express backend
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 const cors = require('cors');
 const http = require('http');
@@ -10,7 +10,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000"],
+    origin: ["http://127.0.0.1:3000"],
     methods: ["GET", "POST"],
     credentials: true
   }
@@ -18,7 +18,7 @@ const io = new Server(server, {
 
 // Enable CORS for all routes
 app.use(cors({
-  origin: ["http://localhost:3000"],
+  origin: ["http://127.0.0.1:3000"],
   credentials: true
 }));
 
@@ -32,87 +32,99 @@ const LOGS_FILE = path.join(DATA_DIR, 'logs.json');
 const SELLER_CODES_FILE = path.join(DATA_DIR, 'sellerCodes.json');
 const SELLER_NAMES_FILE = path.join(DATA_DIR, 'sellerNames.json');
 
-// Ensure data files exist
-function ensureFile(file, defaultValue) {
-  if (!fs.existsSync(file)) {
-    fs.writeFileSync(file, JSON.stringify(defaultValue, null, 2));
+// Ensure data files exist (async)
+async function ensureFile(file, defaultValue) {
+  try {
+    await fs.access(file);
+  } catch {
+    await fs.writeFile(file, JSON.stringify(defaultValue, null, 2));
   }
 }
 
-ensureFile(USERS_FILE, []);
-ensureFile(TICKETS_FILE, []);
-ensureFile(LOGS_FILE, []);
-ensureFile(SELLER_CODES_FILE, []);
-ensureFile(SELLER_NAMES_FILE, {});
+(async () => {
+  await ensureFile(USERS_FILE, []);
+  await ensureFile(TICKETS_FILE, []);
+  await ensureFile(LOGS_FILE, []);
+  await ensureFile(SELLER_CODES_FILE, []);
+  await ensureFile(SELLER_NAMES_FILE, {});
+})();
 
-// Load predetermined codes from file
-const PREDETERMINED_CODES = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'predeterminedCodes.json'), 'utf-8'));
-
-// Helper to read/write users
-function readUsers() {
-  return JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8'));
-}
-function writeUsers(users) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-}
-
-// Helper to read/write tickets
-function readTickets() {
-  return JSON.parse(fs.readFileSync(TICKETS_FILE, 'utf-8'));
-}
-function writeTickets(tickets) {
-  fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-}
-
-// Helper to read/write logs
-function readLogs() {
-  return JSON.parse(fs.readFileSync(LOGS_FILE, 'utf-8'));
-}
-function writeLogs(logs) {
-  fs.writeFileSync(LOGS_FILE, JSON.stringify(logs, null, 2));
-}
-
-// Helper to read/write seller codes
-function readSellerCodes() {
+// Helper to load predetermined codes asynchronously
+async function loadPredeterminedCodes() {
   try {
-    return JSON.parse(fs.readFileSync(SELLER_CODES_FILE, 'utf-8'));
+    const data = await fs.readFile(path.join(DATA_DIR, 'predeterminedCodes.json'), 'utf-8');
+    return JSON.parse(data);
+  } catch (e) {
+    return [];
+  }
+}
+
+// Helper to read/write users (async)
+async function readUsers() {
+  return JSON.parse(await fs.readFile(USERS_FILE, 'utf-8'));
+}
+async function writeUsers(users) {
+  await fs.writeFile(USERS_FILE, JSON.stringify(users, null, 2));
+}
+
+// Helper to read/write tickets (async)
+async function readTickets() {
+  return JSON.parse(await fs.readFile(TICKETS_FILE, 'utf-8'));
+}
+async function writeTickets(tickets) {
+  await fs.writeFile(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+}
+
+// Helper to read/write logs (async)
+async function readLogs() {
+  return JSON.parse(await fs.readFile(LOGS_FILE, 'utf-8'));
+}
+async function writeLogs(logs) {
+  await fs.writeFile(LOGS_FILE, JSON.stringify(logs, null, 2));
+}
+
+// Helper to read/write seller codes (async)
+async function readSellerCodes() {
+  try {
+    return JSON.parse(await fs.readFile(SELLER_CODES_FILE, 'utf-8'));
   } catch (error) {
     console.error('Error reading seller codes:', error);
     return [];
   }
 }
 
-function writeSellerCodes(codes) {
+async function writeSellerCodes(codes) {
   try {
-    fs.writeFileSync(SELLER_CODES_FILE, JSON.stringify(codes, null, 2));
+    await fs.writeFile(SELLER_CODES_FILE, JSON.stringify(codes, null, 2));
   } catch (error) {
     console.error('Error writing seller codes:', error);
     throw new Error('Failed to save seller code');
   }
 }
 
-// Helper to read/write seller names
-function readSellerNames() {
+// Helper to read/write seller names (async)
+async function readSellerNames() {
   try {
-    return JSON.parse(fs.readFileSync(SELLER_NAMES_FILE, 'utf-8'));
+    return JSON.parse(await fs.readFile(SELLER_NAMES_FILE, 'utf-8'));
   } catch (e) {
     return {};
   }
 }
-function writeSellerNames(obj) {
-  fs.writeFileSync(SELLER_NAMES_FILE, JSON.stringify(obj, null, 2));
+async function writeSellerNames(obj) {
+  await fs.writeFile(SELLER_NAMES_FILE, JSON.stringify(obj, null, 2));
 }
 
-// Helper to get seller code
-function getSellerCode(sellerEmail) {
-  const codes = readSellerCodes();
-  const codeEntry = codes.find(c => c.sellerEmail.toLowerCase() === sellerEmail.toLowerCase());
+// Helper to get seller code (async)
+async function getSellerCode(sellerEmail) {
+  const codes = await readSellerCodes();
+  const codeEntry = codes.find(c => c.sellerEmail && c.sellerEmail.toLowerCase() === sellerEmail.toLowerCase());
   return codeEntry ? codeEntry.code : null;
 }
 
-// Helper to get code info
-function getCodeInfo(code) {
-  if (!PREDETERMINED_CODES.includes(code)) return null;
+// Helper to get code info (async)
+async function getCodeInfo(code) {
+  const codes = await loadPredeterminedCodes();
+  if (!codes.includes(code)) return null;
   return { code };
 }
 
@@ -130,7 +142,7 @@ app.post('/api/register', async (req, res) => {
   if (!firstName || !lastName || !password || (!email && !phone)) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
-  const users = readUsers();
+  const users = await readUsers();
   if (email && users.find(u => u.email === email)) {
     return res.status(409).json({ error: 'Email already registered.' });
   }
@@ -149,14 +161,14 @@ app.post('/api/register', async (req, res) => {
     confirmed: true
   };
   users.push(newUser);
-  writeUsers(users);
+  await writeUsers(users);
   res.status(201).json({ message: 'Registration successful.', user: { ...newUser, password: undefined } });
 });
 
 // Login route
 app.post('/api/login', async (req, res) => {
   const { email, phone, password } = req.body;
-  const users = readUsers();
+  const users = await readUsers();
   const user = users.find(u => (email && u.email === email) || (phone && u.phone === phone));
   if (!user) {
     return res.status(401).json({ error: 'Invalid credentials.' });
@@ -168,43 +180,43 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Admin: Approve seller
-app.post('/api/admin/approve-seller', (req, res) => {
+app.post('/api/admin/approve-seller', async (req, res) => {
   const { email } = req.body;
-  const users = readUsers();
+  const users = await readUsers();
   const user = users.find(u => u.email === email && u.role === 'seller');
   if (!user) return res.status(404).json({ error: 'Seller not found.' });
   user.approved = true;
-  writeUsers(users);
+  await writeUsers(users);
   // Log action
-  const logs = readLogs();
+  const logs = await readLogs();
   logs.push({ action: 'approve-seller', email, timestamp: Date.now() });
-  writeLogs(logs);
+  await writeLogs(logs);
   res.json({ message: 'Seller approved.' });
 });
 
 // Admin: Decline seller (remove from users)
-app.post('/api/admin/decline-seller', (req, res) => {
+app.post('/api/admin/decline-seller', async (req, res) => {
   const { email } = req.body;
-  let users = readUsers();
+  let users = await readUsers();
   const userIdx = users.findIndex(u => u.email === email && u.role === 'seller');
   if (userIdx === -1) return res.status(404).json({ error: 'Seller not found.' });
   users.splice(userIdx, 1);
-  writeUsers(users);
+  await writeUsers(users);
   // Log action
-  const logs = readLogs();
+  const logs = await readLogs();
   logs.push({ action: 'decline-seller', email, timestamp: Date.now() });
-  writeLogs(logs);
+  await writeLogs(logs);
   res.json({ message: 'Seller declined and removed.' });
 });
 
 // Admin: Generate tickets and assign directly to buyer
-app.post('/api/admin/generate-tickets', (req, res) => {
+app.post('/api/admin/generate-tickets', async (req, res) => {
   const { buyerEmail, buyerPhone, amount } = req.body;
   if ((!buyerEmail && !buyerPhone) || typeof amount !== 'number' || amount < 1 || amount > 9999) {
     return res.status(400).json({ error: 'Invalid input.' });
   }
   // Check if buyer exists by email or phone
-  const users = readUsers();
+  const users = await readUsers();
   let buyers = [];
   if (buyerEmail) {
     const byEmail = users.find(u => u.email === buyerEmail && u.role === 'buyer');
@@ -222,33 +234,34 @@ app.post('/api/admin/generate-tickets', (req, res) => {
     buyer.tickets += amount;
     console.log('DEBUG: Granting tickets. Buyer:', buyer.email || buyer.phone, 'New ticket count:', buyer.tickets);
   });
-  writeUsers(users);
+  await writeUsers(users);
   // Log action for each buyer
-  const logs = readLogs();
+  const logs = await readLogs();
   buyers.forEach(buyer => {
     logs.push({ action: 'admin-grant-tickets', buyerEmail: buyer.email, buyerPhone: buyer.phone, amount, timestamp: Date.now() });
   });
-  writeLogs(logs);
+  await writeLogs(logs);
   // Log in tickets.json for admin view (no code/used fields)
-  const tickets = readTickets();
+  const tickets = await readTickets();
   buyers.forEach(buyer => {
     tickets.push({ buyerEmail: buyer.email, buyerPhone: buyer.phone, amount, granted: true, timestamp: Date.now() });
   });
-  writeTickets(tickets);
+  await writeTickets(tickets);
   res.json({ message: 'Tickets granted.', tickets: buyers.map(b => ({ email: b.email, phone: b.phone, tickets: b.tickets })) });
 });
 
 // Admin: Get all logs
-app.get('/api/admin/logs', (req, res) => {
-  res.json(readLogs());
+app.get('/api/admin/logs', async (req, res) => {
+  const logs = await readLogs();
+  res.json(logs);
 });
 
 // Admin: Get all sellers and their ticket counts
-app.get('/api/admin/sellers', (req, res) => {
-  const users = readUsers();
-  const logs = readLogs();
-  const sellers = users.filter(u => u.role === 'seller').map(u => {
-    const code = getSellerCode(u.email);
+app.get('/api/admin/sellers', async (req, res) => {
+  const users = await readUsers();
+  const logs = await readLogs();
+  const sellers = await Promise.all(users.filter(u => u.role === 'seller').map(async u => {
+    const code = await getSellerCode(u.email);
     // Sum all spend-tickets logs for this seller's code
     const totalEarned = logs
       .filter(l => l.action === 'spend-tickets' && l.code && l.code.toUpperCase() === (code || '').toUpperCase())
@@ -262,49 +275,44 @@ app.get('/api/admin/sellers', (req, res) => {
       code,
       totalEarned
     };
-  });
+  }));
   res.json(sellers);
 });
 
 // Admin: Show all generated ticket codes for buyers
-app.get('/api/admin/tickets', (req, res) => {
-  const tickets = readTickets();
+app.get('/api/admin/tickets', async (req, res) => {
+  const tickets = await readTickets();
   res.json(tickets);
 });
 
 // Admin: Get all seller names by code
-app.get('/api/admin/seller-names', (req, res) => {
-  res.json(readSellerNames());
+app.get('/api/admin/seller-names', async (req, res) => {
+  const names = await readSellerNames();
+  res.json(names);
 });
 
 // Admin: Set seller name for a code
-app.post('/api/admin/seller-names', (req, res) => {
+app.post('/api/admin/seller-names', async (req, res) => {
   const { code, name } = req.body;
   if (!code) return res.status(400).json({ error: 'Code required' });
-  const names = readSellerNames();
+  const names = await readSellerNames();
   if (name && name.trim()) {
     names[code.toUpperCase()] = name.trim();
   } else {
     delete names[code.toUpperCase()];
   }
-  writeSellerNames(names);
+  await writeSellerNames(names);
   res.json({ success: true });
 });
 
-// Buyer: Spend tickets using seller code
-app.post('/api/buyer/spend', (req, res) => {
+// Buyer: Spend tickets using seller code (async)
+app.post('/api/buyer/spend', async (req, res) => {
   const { buyerId, code, amount } = req.body;
   if (!buyerId || !code || typeof amount !== 'number' || amount < 1) {
     return res.status(400).json({ error: 'Invalid input.' });
   }
   // Always reload predetermined codes from file for latest changes
-  const predeterminedCodesPath = path.join(DATA_DIR, 'predeterminedCodes.json');
-  let latestCodes = [];
-  try {
-    latestCodes = JSON.parse(fs.readFileSync(predeterminedCodesPath, 'utf-8'));
-  } catch (e) {
-    return res.status(500).json({ error: 'Could not load predetermined codes.' });
-  }
+  let latestCodes = await loadPredeterminedCodes();
   const codeToCheck = code.trim().toUpperCase();
   // Debug logging
   console.log('Incoming code:', code, '| After trim/upper:', codeToCheck);
@@ -312,7 +320,7 @@ app.post('/api/buyer/spend', (req, res) => {
   if (!latestCodes.map(c => c.toUpperCase()).includes(codeToCheck)) {
     return res.status(404).json({ error: 'Invalid code.' });
   }
-  const users = readUsers();
+  const users = await readUsers();
   const buyer = users.find(u => (u.email === buyerId || u.phone === buyerId));
   if (!buyer) {
     return res.status(404).json({ error: 'Buyer not found.' });
@@ -321,11 +329,11 @@ app.post('/api/buyer/spend', (req, res) => {
     return res.status(400).json({ error: 'Not enough tickets.' });
   }
   buyer.tickets -= amount;
-  writeUsers(users);
+  await writeUsers(users);
   // Log the transaction
-  const logs = readLogs();
+  const logs = await readLogs();
   logs.push({ action: 'spend-tickets', buyerId, code: codeToCheck, amount, timestamp: Date.now() });
-  writeLogs(logs);
+  await writeLogs(logs);
   notifyUserUpdate();
   res.json({ message: 'Purchase successful.', buyerTickets: buyer.tickets });
 });
@@ -336,13 +344,13 @@ app.post('/api/seller/spend', (req, res) => {
 });
 
 // --- Promote user to admin ---
-app.post('/api/admin/promote', (req, res) => {
+app.post('/api/admin/promote', async (req, res) => {
   const { email, phone } = req.body;
   // Use passwords.json for lookup
   const PASSWORDS_FILE = path.join(__dirname, '../flask_frontend/passwords.json');
   let passwordData = [];
   try {
-    passwordData = JSON.parse(fs.readFileSync(PASSWORDS_FILE, 'utf-8'));
+    passwordData = JSON.parse(await fs.readFile(PASSWORDS_FILE, 'utf-8'));
   } catch (e) {
     return res.status(500).json({ error: 'Could not read passwords.json' });
   }
@@ -355,7 +363,7 @@ app.post('/api/admin/promote', (req, res) => {
   if (!found) return res.status(404).json({ error: 'User not found in passwords.json.' });
 
   // Now update users.json to promote
-  const users = readUsers();
+  const users = await readUsers();
   let user = null;
   if (email) {
     user = users.find(u => (u.email && u.email.toLowerCase() === email.toLowerCase()));
@@ -364,15 +372,15 @@ app.post('/api/admin/promote', (req, res) => {
   }
   if (!user) return res.status(404).json({ error: 'User not found in users.json.' });
   user.role = 'admin';
-  writeUsers(users);
+  await writeUsers(users);
   res.json({ message: 'User promoted to admin.' });
 });
 
 // --- Forgot password: send code to admin and allow reset ---
 let resetCodes = {};
-app.post('/api/forgot-password', (req, res) => {
+app.post('/api/forgot-password', async (req, res) => {
   const { email } = req.body;
-  const users = readUsers();
+  const users = await readUsers();
   const user = users.find(u => u.email === email);
   if (!user) return res.status(404).json({ error: 'User not found.' });
   // Generate 3-digit code
@@ -382,16 +390,16 @@ app.post('/api/forgot-password', (req, res) => {
   console.log(`Password reset code for ${email}: ${code}`);
   res.json({ message: 'Reset code sent to admin.' });
 });
-app.post('/api/reset-password', (req, res) => {
+app.post('/api/reset-password', async (req, res) => {
   const { email, code, newPassword } = req.body;
   if (!resetCodes[email] || resetCodes[email] !== code) {
     return res.status(400).json({ error: 'Invalid or expired code.' });
   }
-  const users = readUsers();
+  const users = await readUsers();
   const user = users.find(u => u.email === email);
   if (!user) return res.status(404).json({ error: 'User not found.' });
   user.password = newPassword;
-  writeUsers(users);
+  await writeUsers(users);
   delete resetCodes[email];
   res.json({ message: 'Password reset successful.' });
 });

@@ -1,1 +1,0 @@
-// This folder contains the deleted React frontend files for backup purposes.

@@ -6,7 +6,7 @@
     "email": "admin@example.com",
     "password": "adminpass1",
     "role": "admin",
-    "confirmed": true
+    "confirmed": true,
+    "approved": true
   }
-
 ]
