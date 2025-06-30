@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard - Bank of Begonia</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; transition: background 0.3s, color 0.3s; }
         .container { max-width: 1200px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #43c6ac55; padding: 32px; }
         h1 { color: #7366bd; margin-bottom: 24px; }
         .info { font-size: 20px; margin-bottom: 24px; }
@@ -23,6 +23,13 @@
         form { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
         input[type="text"], input[type="number"] { padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; outline: none; transition: border 0.2s; width: 90%; max-width: 260px; }
         input[type="text"]:focus, input[type="number"]:focus { border: 1.5px solid #7366bd; }
+        body.dark-mode { background: #181a1b; color: #e0e0e0; }
+        body.dark-mode .container { background: #23272b; color: #e0e0e0; }
+        body.dark-mode .section { background: #23272b; }
+        body.dark-mode th { background: #22223b; color: #fff; }
+        body.dark-mode .btn, body.dark-mode button { background: #22223b; color: #fff; }
+        body.dark-mode .btn-logout { background: #c0392b; }
+        body.dark-mode input, body.dark-mode input:focus, body.dark-mode input[type="number"]:focus { background: #23272b; color: #e0e0e0; border: 1px solid #444; }
         @media (max-width: 900px) { .dashboard-grid { flex-direction: column; } .section { min-width: unset; } }
     </style>
     <script>
@@ -38,10 +45,20 @@
                 .then(() => location.reload());
         }
     }
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    window.onload = function() {
+        if(localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+    }
     </script>
 </head>
 <body>
     <div class="container">
+        <button onclick="toggleDarkMode()" style="float:right; margin-bottom:10px;">Toggle Dark Mode</button>
         <h1>Admin Dashboard</h1>
         <div class="info">
             Welcome, <b>{{ user.firstName }}</b> (Admin)
