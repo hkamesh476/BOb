@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import requests
-import bcrypt
 import json
 import os
 
@@ -14,11 +13,11 @@ def save_password_record(contact, password):
     if contact == 'admin@example.com':
         record = {"email": contact, "password": password}
     else:
-        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        # Passwords are now stored in plain text (bcrypt removed)
         if '@' in contact:
-            record = {"email": contact, "password": hashed}
+            record = {"email": contact, "password": password}
         else:
-            record = {"phone": contact, "password": hashed}
+            record = {"phone": contact, "password": password}
     # Load existing
     if os.path.exists(PASSWORDS_FILE):
         with open(PASSWORDS_FILE, 'r') as f:

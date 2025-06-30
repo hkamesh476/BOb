@@ -55,7 +55,7 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 3. Install Flask UI dependencies:
    ```bash
    cd ../flask_frontend
-   pip install -r requirements.txt  # or pip install flask bcrypt requests
+   pip install -r requirements.txt  # or pip install flask requests
    ```
 
 ### Running the Application
@@ -81,7 +81,7 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 - View seller earnings
 
 ### For Sellers
-- Register and get admin approval
+- Admin will add you name to a list
 - Receive a unique 2-character seller code
 - Accept tickets from buyers
 - Monitor earned tickets
@@ -137,10 +137,11 @@ All backup and deleted folders have been removed for a clean workspace.
 - Use HTTPS and proper session management in production
 - Optimize React state updates and use memoization/hooks where possible
 
+
 ## Security Note
 
 This is a demonstration project. For production use:
-- Implement proper password hashing
+- Implement proper password hashing (currently passwords are stored in plain text)
 - Use a secure database instead of JSON files
 - Add input validation and sanitization
 - Implement proper session management
