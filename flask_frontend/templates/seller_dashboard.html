@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Dashboard - Bank of Begonia</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #43c6ac55; padding: 32px; }
+        h1 { color: #7366bd; margin-bottom: 24px; }
+        .info { font-size: 20px; margin-bottom: 24px; }
+        .tickets { font-size: 22px; color: #43c6ac; font-weight: bold; margin-bottom: 16px; }
+        .actions { margin: 16px 0; }
+        .btn, button { display: inline-block; margin: 8px 4px; padding: 8px 18px; border-radius: 6px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; background: #7366bd; color: #fff; }
+        .btn-logout { background: #f7786b; }
+        .btn:hover, button:hover { opacity: 0.9; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #e0e0e0; }
+        th { background: #7366bd; color: #fff; }
+        @media (max-width: 900px) { .container { max-width: 98vw; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Seller Dashboard</h1>
+        <div class="info">
+            Welcome, <b>{{ user.firstName }}</b> (Seller)
+        </div>
+        <div class="tickets">💰 Tickets earned: {{ user.tickets or 0 }}</div>
+        <div class="actions">
+            <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
+            <a href="{{ url_for('home') }}" class="btn" style="background:#7366bd;">Back to Welcome Screen</a>
+            <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+        </div>
+        <!-- Add more seller-specific features here -->
+    </div>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - Bank of Begonia</title>
+    <title>Admin Dashboard - Bank of Begonia</title>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; }
         .container { max-width: 1200px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #43c6ac55; padding: 32px; }
@@ -42,9 +42,9 @@
 </head>
 <body>
     <div class="container">
-        <h1>Dashboard</h1>
+        <h1>Admin Dashboard</h1>
         <div class="info">
-            Welcome, <b>{{ user.firstName }}</b> ({{ user.role|capitalize }})
+            Welcome, <b>{{ user.firstName }}</b> (Admin)
         </div>
         {% if spend_success %}<div class="msg-success">{{ spend_success }}</div>{% endif %}
         {% if spend_error %}<div class="msg-error">{{ spend_error }}</div>{% endif %}
@@ -52,24 +52,6 @@
         {% if grant_error %}<div class="msg-error">{{ grant_error }}</div>{% endif %}
         {% if sellername_success %}<div class="msg-success">{{ sellername_success }}</div>{% endif %}
         {% if sellername_error %}<div class="msg-error">{{ sellername_error }}</div>{% endif %}
-        {% if user.role == 'buyer' %}
-            <div class="tickets">🎟️ Tickets: {{ user.tickets or 0 }}</div>
-            <div class="actions">
-                <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
-            </div>
-            <div class="section">
-                <form method="post" action="{{ url_for('spend_tickets') }}">
-                    <input type="text" name="code" placeholder="Seller Code" required>
-                    <input type="number" name="amount" placeholder="Amount" min="1" required>
-                    <button type="submit">Spend Tickets</button>
-                </form>
-            </div>
-        {% elif user.role == 'seller' %}
-            <div class="tickets">💰 Tickets earned: {{ user.tickets or 0 }}</div>
-            <div class="actions">
-                <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
-            </div>
-        {% elif user.role == 'admin' %}
         <div class="dashboard-grid">
             <div class="section">
                 <h3>Seller Names & Codes</h3>
@@ -134,7 +116,6 @@
                 </div>
             </div>
         </div>
-        {% endif %}
         <div class="actions">
             <a href="{{ url_for('home') }}" class="btn" style="background:#7366bd;">Back to Welcome Screen</a>
             <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>

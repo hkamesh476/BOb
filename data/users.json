@@ -4,9 +4,18 @@
     "firstName": "Admin",
     "lastName": "User",
     "email": "admin@example.com",
-    "password": "adminpass1",
+    "password": "adminpass",
     "role": "admin",
     "confirmed": true,
     "approved": true
+  },
+  {
+    "id": "1751255184609",
+    "firstName": "Harshan",
+    "lastName": "Kamesh",
+    "email": "hkamesh8@gmail.com",
+    "password": "vl950960",
+    "role": "buyer",
+    "confirmed": true
   }
 ]

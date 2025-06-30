@@ -1,5 +1,3 @@
-
-
 <p align="center">
   <img src="flask_frontend/static/BOB picture.png" alt="Bank of Begonia Logo" width="180" />
 </p>
@@ -169,7 +167,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 For support, please open an issue in the GitHub repository.
-
----
-
-For more details, see the `.github/copilot-instructions.md` file.

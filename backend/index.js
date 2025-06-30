@@ -128,13 +128,7 @@ async function getCodeInfo(code) {
   return { code };
 }
 
-// --- Plaintext password system ---
-function customHash(password, index) {
-  return password;
-}
-function customVerify(password, index, hash) {
-  return password === hash;
-}
+// --- Simple password comparison ---
 
 // Registration route
 app.post('/api/register', async (req, res) => {
@@ -156,7 +150,7 @@ app.post('/api/register', async (req, res) => {
     lastName,
     email,
     phone,
-    password: password,
+    password, // Store password directly
     role: 'buyer',
     confirmed: true
   };
@@ -212,7 +206,7 @@ app.post('/api/admin/decline-seller', async (req, res) => {
 // Admin: Generate tickets and assign directly to buyer
 app.post('/api/admin/generate-tickets', async (req, res) => {
   const { buyerEmail, buyerPhone, amount } = req.body;
-  if ((!buyerEmail && !buyerPhone) || typeof amount !== 'number' || amount < 1 || amount > 9999) {
+  if ((!buyerEmail && !buyerPhone) || typeof amount !== 'number' || amount < 1 || amount > 99) {
     return res.status(400).json({ error: 'Invalid input.' });
   }
   // Check if buyer exists by email or phone
@@ -303,6 +297,35 @@ app.post('/api/admin/seller-names', async (req, res) => {
   }
   await writeSellerNames(names);
   res.json({ success: true });
+});
+
+// Remove seller name by code
+app.delete('/api/admin/seller-names/:code', async (req, res) => {
+  const code = req.params.code.toUpperCase();
+  const names = await readSellerNames();
+  console.log('DEBUG: Current seller names:', names);
+  if (names[code]) {
+    delete names[code];
+    await writeSellerNames(names);
+    return res.json({ success: true, message: 'Seller name removed.' });
+  }
+  console.log('DEBUG: Seller name not found for code:', code);
+  res.status(404).json({ error: 'Seller name not found.' });
+});
+
+// Remove seller code by code or email
+app.delete('/api/admin/seller-codes/:codeOrEmail', async (req, res) => {
+  const codeOrEmail = req.params.codeOrEmail;
+  let codes = await readSellerCodes();
+  console.log('DEBUG: Current seller codes:', codes);
+  const initialLength = codes.length;
+  codes = codes.filter(c => c.code !== codeOrEmail.toUpperCase() && c.sellerEmail !== codeOrEmail);
+  if (codes.length < initialLength) {
+    await writeSellerCodes(codes);
+    return res.json({ success: true, message: 'Seller code removed.' });
+  }
+  console.log('DEBUG: Seller code not found for:', codeOrEmail);
+  res.status(404).json({ error: 'Seller code not found.' });
 });
 
 // Buyer: Spend tickets using seller code (async)
