@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map - Bank of Begonia</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; }
+        .container { max-width: 600px; margin: 60px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #43c6ac55; padding: 32px; text-align: center; }
+        h1 { color: #43c6ac; margin-bottom: 32px; }
+        .btn { display: inline-block; margin: 12px 8px; padding: 12px 32px; border-radius: 6px; border: none; font-size: 18px; font-weight: 600; cursor: pointer; transition: background 0.2s; background: #7366bd; color: #fff; }
+        .btn:hover { opacity: 0.9; }
+        .map-img { max-width: 90%; max-height: 60vh; border-radius: 8px; box-shadow: 0 2px 8px #ccc; margin-bottom: 24px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Our Location</h1>
+        <img src="/static/map.png" alt="Map" class="map-img" />
+        <br>
+        <a href="{{ url_for('home') }}" class="btn">Back to Welcome</a>
+    </div>
+</body>
+</html>

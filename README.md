@@ -1,11 +1,13 @@
 
+
 <p align="center">
-  <img src="ui/public/BOB picture.png" alt="Bank of Begonia Logo" width="180" />
+  <img src="flask_frontend/static/BOB picture.png" alt="Bank of Begonia Logo" width="180" />
 </p>
 
 # Bank of Begonia
 
-A ticket-based mini banking system for carnivals and events. Built with Node.js, Express, React, and Flask.
+A ticket-based mini banking system for carnivals and events. Built with Node.js, Express, and Flask (UI).
+
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Node](https://img.shields.io/badge/node->=14.0.0-green.svg)
@@ -21,11 +23,12 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 - 📊 Transaction logging and monitoring
 - ⚡ Real-time updates via WebSocket
 - 📝 Admin can assign custom seller names
-- 🟣 Modern, mobile-friendly UI
+- 🟣 Modern, mobile-friendly UI (Flask)
 
 ## Demo Accounts
 
 - **Admin**: admin@example.com / adminpass1
+
 
 ## Quick Start
 
@@ -33,6 +36,7 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 
 - Node.js >= 14.0.0
 - npm >= 6.0.0
+- Python 3.8+
 
 ### Installation
 
@@ -48,10 +52,10 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
    npm install
    ```
 
-3. Install frontend dependencies:
+3. Install Flask UI dependencies:
    ```bash
-   cd ../ui
-   npm install
+   cd ../flask_frontend
+   pip install -r requirements.txt  # or pip install flask bcrypt requests
    ```
 
 ### Running the Application
@@ -62,19 +66,11 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
    ```
    Server will run on http://127.0.0.1:3001
 
-2. Start the frontend (in the ui directory):
-   ```bash
-   npm start
-   ```
-   Application will open in your browser at http://127.0.0.1:3000
-
-3. (Optional) Start the Flask frontend (in the flask_frontend directory):
+2. Start the Flask UI (in the flask_frontend directory):
    ```bash
    python app.py
    ```
-   Flask frontend will run on http://127.0.0.1:3000
-
-   ⚠️ Note: Only one frontend (React or Flask) can run on port 3000 at a time. Stop one before starting the other.
+   Flask UI will run on http://127.0.0.1:3000
 
 ## Usage Guide
 
@@ -96,6 +92,7 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 - Monitor ticket balance
 - Transfer tickets to sellers
 
+
 ## Directory Structure
 
 ```
@@ -103,11 +100,10 @@ bank-of-begonia/
 ├── backend/             # Express server (Node.js backend)
 │   ├── index.js        # Server entry point
 │   └── package.json    # Backend dependencies
-├── ui/                 # React frontend
-│   ├── src/            # React source code
-│   └── package.json    # Frontend dependencies
-├── flask_frontend/     # Optional Flask frontend (do not run with React at the same time)
-│   └── app.py          # Flask app
+├── flask_frontend/     # Flask UI (main user interface)
+│   ├── app.py          # Flask app
+│   └── static/         # Static files (images, etc.)
+│   └── templates/      # HTML templates
 └── data/               # JSON data storage
     ├── users.json      # User accounts
     ├── tickets.json    # Ticket grants
@@ -124,11 +120,11 @@ All backup and deleted folders have been removed for a clean workspace.
 - If you get an error about a port being in use, stop the other server or change the port.
 
 
+
 ## Tech Stack
 
 - **Backend**: Node.js, Express, Socket.io
-- **Frontend**: React, Socket.io-client
-- **Optional Frontend**: Flask
+- **Frontend/UI**: Flask
 - **Storage**: JSON files (easily replaceable with a database)
 - **Real-time**: WebSocket for live updates
 

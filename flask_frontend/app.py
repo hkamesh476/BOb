@@ -34,9 +34,14 @@ def save_password_record(contact, password):
     with open(PASSWORDS_FILE, 'w') as f:
         json.dump(data, f, indent=2)
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
+@app.route('/map')
+def map_page():
+    return render_template('map.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
