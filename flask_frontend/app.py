@@ -1,3 +1,38 @@
+import os
+import json
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+import requests
+
+app = Flask(__name__)
+
+@app.route('/train-ai', methods=['GET', 'POST'])
+def train_ai():
+    msg_success = None
+    msg_error = None
+    training_path = os.path.join(os.path.dirname(__file__), 'ai', 'training_data.json')
+    # Load current training data
+    if os.path.exists(training_path):
+        with open(training_path, 'r', encoding='utf-8') as f:
+            try:
+                training_data = json.load(f)
+            except Exception:
+                training_data = []
+    else:
+        training_data = []
+    if request.method == 'POST':
+        question = request.form.get('question', '').strip()
+        answer = request.form.get('answer', '').strip()
+        if question and answer:
+            training_data.append({'question': question, 'answer': answer})
+            try:
+                with open(training_path, 'w', encoding='utf-8') as f:
+                    json.dump(training_data, f, indent=2)
+                msg_success = 'Training example added!'
+            except Exception as e:
+                msg_error = f'Error saving: {e}'
+        else:
+            msg_error = 'Both question and answer are required.'
+    return render_template('train_ai.html', training_data=training_data, msg_success=msg_success, msg_error=msg_error)
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import requests
 import json
@@ -347,7 +382,22 @@ def transactions():
         if resp.ok:
             logs = resp.json()
             # Only show spend-tickets actions for now
-            transactions = [l for l in logs if l.get('action') == 'spend-tickets']
+            all_transactions = [l for l in logs if l.get('action') == 'spend-tickets']
+            if user:
+                if user.get('role') == 'buyer':
+                    # Show only transactions where this user is the buyer
+                    user_email = user.get('email')
+                    user_phone = user.get('phone')
+                    transactions = [t for t in all_transactions if (t.get('buyerEmail') == user_email or t.get('buyerPhone') == user_phone or t.get('buyerId') == user_email)]
+                elif user.get('role') == 'seller':
+                    # Show only transactions for this seller's code
+                    seller_code = user.get('code')
+                    transactions = [t for t in all_transactions if t.get('code') == seller_code]
+                else:
+                    # Admin sees all
+                    transactions = all_transactions
+            else:
+                transactions = []
         else:
             error = 'Could not fetch transactions.'
     except Exception as e:
@@ -359,6 +409,20 @@ def logout():
     session.clear()
     flash('Logged out successfully.')
     return redirect(url_for('home'))
+
+
+# --- AI Assistant Endpoint ---
+from ai.assistant import BankAIAssistant
+ai_assistant = BankAIAssistant()
+
+@app.route('/ask_ai', methods=['POST'])
+def ask_ai():
+    user = session.get('user')
+    data = request.get_json()
+    question = data.get('question', '')
+    user_email = user.get('email') if user else None
+    answer = ai_assistant.answer(question, user_email=user_email)
+    return {"answer": answer}
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
