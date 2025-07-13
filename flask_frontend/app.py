@@ -412,3 +412,13 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
+
+# Progress endpoint for logs loading indicator (returns percentage)
+
+
+@app.route('/logs-progress')
+def logs_progress():
+    # Simulate progress for demonstration (replace with real logic if needed)
+    import random
+    percent = random.randint(0, 100)
+    return {'percent': percent}

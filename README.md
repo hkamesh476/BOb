@@ -131,41 +131,17 @@ All backup and deleted folders have been removed for a clean workspace.
 
 ## Optimization & Recommendations
 
-- Use async file operations in backend for non-blocking I/O
-- Add input validation and sanitization for all API endpoints
-- Replace JSON file storage with a database for scalability
-- Implement password hashing for security
-- Use HTTPS and proper session management in production
-
-
-## Security Note
-
-This is a demonstration project. For production use:
 - Implement proper password hashing (currently passwords are stored in plain text)
 - Use a secure database instead of JSON files
 - Add input validation and sanitization
-- Implement proper session management
-- Use HTTPS
-- Add rate limiting
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
 
-- Built for educational purposes
-- Perfect for small events and carnivals
-- Easy to modify and extend
 
+Refer to this checklist before deploying or updating your application.
 ## Support
 
 For support, please open an issue in the GitHub repository.
