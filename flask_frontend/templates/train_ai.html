@@ -21,21 +21,9 @@
 <body>
     <div class="container">
         <h1>Train Begonia AI</h1>
-        {% if msg_success %}<div class="msg-success">{{ msg_success }}</div>{% endif %}
-        {% if msg_error %}<div class="msg-error">{{ msg_error }}</div>{% endif %}
-        <form method="post">
-            <input type="text" name="question" placeholder="Enter a sample question" required />
-            <textarea name="answer" placeholder="Enter the answer" required rows="3"></textarea>
-            <button type="submit">Add Training Example</button>
-        </form>
-        <div class="training-list">
-            <h3>Current Training Data</h3>
-            {% for item in training_data %}
-                <div class="training-item">
-                    <span class="q">Q: {{ item.question }}</span><br>
-                    <span class="a">A: {{ item.answer }}</span>
-                </div>
-            {% endfor %}
+        <div style="margin: 32px 0; color: #7366bd; font-size: 18px;">
+            <b>Training via admin interface is now handled by Ollama Phi-3.</b><br>
+            Please update <code>training_data.json</code> directly or use the new admin tools.
         </div>
         <a href="/dashboard" style="display:inline-block;margin-top:20px;">Back to Dashboard</a>
     </div>

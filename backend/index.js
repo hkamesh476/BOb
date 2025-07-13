@@ -245,9 +245,23 @@ app.post('/api/admin/generate-tickets', async (req, res) => {
 });
 
 // Admin: Get all logs
+// Admin: Get paginated logs
 app.get('/api/admin/logs', async (req, res) => {
   const logs = await readLogs();
-  res.json(logs);
+  let { page = 1, limit = 20 } = req.query;
+  page = parseInt(page);
+  limit = parseInt(limit);
+  if (isNaN(page) || page < 1) page = 1;
+  if (isNaN(limit) || limit < 1 || limit > 100) limit = 20;
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const paginatedLogs = logs.slice(start, end);
+  res.json({
+    logs: paginatedLogs,
+    page,
+    limit,
+    total: logs.length
+  });
 });
 
 // Admin: Get all sellers and their ticket counts
@@ -435,7 +449,7 @@ app.get('/', (req, res) => {
 // Socket.IO connection handling
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
-  
+
   socket.on('disconnect', () => {
     console.log('Client disconnected:', socket.id);
   });

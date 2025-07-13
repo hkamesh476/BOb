@@ -411,18 +411,11 @@ def logout():
     return redirect(url_for('home'))
 
 
-# --- AI Assistant Endpoint ---
-from ai.assistant import BankAIAssistant
-ai_assistant = BankAIAssistant()
 
-@app.route('/ask_ai', methods=['POST'])
-def ask_ai():
-    user = session.get('user')
-    data = request.get_json()
-    question = data.get('question', '')
-    user_email = user.get('email') if user else None
-    answer = ai_assistant.answer(question, user_email=user_email)
-    return {"answer": answer}
+# --- AI Assistant Endpoint ---
+# All neural network code is removed. The AI assistant now streams responses word-by-word using Ollama Phi-3.
+from ollama_phi3 import ollama_bp
+app.register_blueprint(ollama_bp)
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)

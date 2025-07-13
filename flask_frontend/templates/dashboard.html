@@ -1,178 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - Bank of Begonia</title>
     <style>
-    /* AI Chatbot Icon */
-    #ai-chatbot-icon {
-        position: fixed;
-        left: 24px;
-        bottom: 24px;
-        width: 56px;
-        height: 56px;
-        background: #ff4fa3;
-        border-radius: 50%;
-        box-shadow: 0 2px 12px #22223b44;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 1100;
-        transition: background 0.2s;
-    }
-    #ai-chatbot-icon:hover {
-        background: #ff7fcf;
-    }
-    #ai-chatbot-icon svg {
-        width: 32px;
-        height: 32px;
-        fill: #fff;
-    }
-    #ai-chatbot { display: none; }
-    #ai-chatbot.open { display: block; }
-    @media (max-width: 600px) {
-        #ai-chatbot-icon { left: 8px; bottom: 8px; width: 44px; height: 44px; }
-        #ai-chatbot { width: 98vw !important; left: 0 !important; right: 0 !important; }
-    }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; transition: background 0.3s, color 0.3s; }
-        .container { max-width: 1200px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #43c6ac55; padding: 32px; }
-        h1 { color: #7366bd; margin-bottom: 24px; }
-        .info { font-size: 20px; margin-bottom: 24px; }
-        .dashboard-grid { display: flex; flex-wrap: wrap; gap: 24px; }
-        .section { flex: 1 1 350px; background: #f5f6fa; border-radius: 8px; padding: 18px 16px; box-shadow: 0 2px 8px #43c6ac22; min-width: 350px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-        th { background: #7366bd; color: #fff; }
-        .btn, button { display: inline-block; margin: 8px 4px; padding: 8px 18px; border-radius: 6px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; background: #7366bd; color: #fff; }
-        .btn-logout { background: #f7786b; }
-        .btn:hover, button:hover { opacity: 0.9; }
-        .msg-success { color: #43c6ac; font-weight: 500; margin-bottom: 8px; }
-        .msg-error { color: #f7786b; font-weight: 500; margin-bottom: 8px; }
-        .actions { margin: 16px 0; }
-        .tickets { font-size: 22px; color: #43c6ac; font-weight: bold; margin-bottom: 16px; }
-        form { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-        input[type="text"], input[type="number"] { padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; outline: none; transition: border 0.2s; width: 90%; max-width: 260px; }
-        input[type="text"]:focus, input[type="number"]:focus { border: 1.5px solid #7366bd; }
-        body.dark-mode { background: #181a1b; color: #e0e0e0; }
-        body.dark-mode .container { background: #23272b; color: #e0e0e0; }
-        body.dark-mode .section { background: #23272b; }
-        body.dark-mode th { background: #22223b; color: #fff; }
-        body.dark-mode .btn, body.dark-mode button { background: #22223b; color: #fff; }
-        body.dark-mode .btn-logout { background: #c0392b; }
-        body.dark-mode input, body.dark-mode input:focus, body.dark-mode input[type="number"]:focus { background: #23272b; color: #e0e0e0; border: 1px solid #444; }
-        @media (max-width: 900px) { .dashboard-grid { flex-direction: column; } .section { min-width: unset; } }
+        /* AI Chatbot Icon */
+        #ai-chatbot-icon {
+            position: fixed;
+            left: 24px;
+            bottom: 24px;
+            width: 56px;
+            height: 56px;
+            background: #ff4fa3;
+            border-radius: 50%;
+            box-shadow: 0 2px 12px #22223b44;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1100;
+            transition: background 0.2s;
+        }
+
+        #ai-chatbot-icon:hover {
+            background: #ff7fcf;
+        }
+
+        #ai-chatbot-icon svg {
+            width: 32px;
+            height: 32px;
+            fill: #fff;
+        }
+
+        #ai-chatbot {
+            display: none;
+        }
+
+        #ai-chatbot.open {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            #ai-chatbot-icon {
+                left: 8px;
+                bottom: 8px;
+                width: 44px;
+                height: 44px;
+            }
+
+            #ai-chatbot {
+                width: 98vw !important;
+                left: 0 !important;
+                right: 0 !important;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #87CEEB;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px #43c6ac55;
+            padding: 32px;
+        }
+
+        h1 {
+            color: #7366bd;
+            margin-bottom: 24px;
+        }
+
+        .info {
+            font-size: 20px;
+            margin-bottom: 24px;
+        }
+
+        .dashboard-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .section {
+            flex: 1 1 350px;
+            background: #f5f6fa;
+            border-radius: 8px;
+            padding: 18px 16px;
+            box-shadow: 0 2px 8px #43c6ac22;
+            min-width: 350px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px 6px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #7366bd;
+            color: #fff;
+        }
+
+        .btn,
+        button {
+            display: inline-block;
+            margin: 8px 4px;
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            background: #7366bd;
+            color: #fff;
+        }
+
+        .btn-logout {
+            background: #f7786b;
+        }
+
+        .btn:hover,
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .msg-success {
+            color: #43c6ac;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .msg-error {
+            color: #f7786b;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .actions {
+            margin: 16px 0;
+        }
+
+        .tickets {
+            font-size: 22px;
+            color: #43c6ac;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.2s;
+            width: 90%;
+            max-width: 260px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border: 1.5px solid #7366bd;
+        }
+
+        body.dark-mode {
+            background: #181a1b;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .container {
+            background: #23272b;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .section {
+            background: #23272b;
+        }
+
+        body.dark-mode th {
+            background: #22223b;
+            color: #fff;
+        }
+
+        body.dark-mode .btn,
+        body.dark-mode button {
+            background: #22223b;
+            color: #fff;
+        }
+
+        body.dark-mode .btn-logout {
+            background: #c0392b;
+        }
+
+        body.dark-mode input,
+        body.dark-mode input:focus,
+        body.dark-mode input[type="number"]:focus {
+            background: #23272b;
+            color: #e0e0e0;
+            border: 1px solid #444;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                flex-direction: column;
+            }
+
+            .section {
+                min-width: unset;
+            }
+        }
     </style>
     <style>
-    /* AI Chatbot styles */
-    #ai-chatbot { position: fixed; bottom: 24px; right: 24px; width: 340px; background: #fff; border-radius: 10px; box-shadow: 0 2px 16px #22223b44; z-index: 1000; }
-    #ai-chatbot.dark-mode { background: #23272b; color: #e0e0e0; }
-    #ai-chat-header { background: #7366bd; color: #fff; padding: 10px 16px; border-radius: 10px 10px 0 0; font-weight: bold; }
-    #ai-chat-messages { max-height: 220px; overflow-y: auto; padding: 12px; font-size: 15px; }
-    .ai-msg { margin: 8px 0; }
-    .ai-user { color: #7366bd; font-weight: 600; }
-    .ai-bot { color: #43c6ac; }
-    #ai-chat-input { display: flex; border-top: 1px solid #eee; }
-    #ai-chat-input input { flex: 1; padding: 8px; border: none; border-radius: 0 0 0 10px; font-size: 15px; }
-    #ai-chat-input button { border-radius: 0 0 10px 0; background: #7366bd; color: #fff; border: none; padding: 8px 16px; font-size: 15px; cursor: pointer; }
+        /* AI Chatbot styles */
+        #ai-chatbot {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 340px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 16px #22223b44;
+            z-index: 1000;
+        }
+
+        #ai-chatbot.dark-mode {
+            background: #23272b;
+            color: #e0e0e0;
+        }
+
+        #ai-chat-header {
+            background: #7366bd;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 10px 10px 0 0;
+            font-weight: bold;
+        }
+
+        #ai-chat-messages {
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 12px;
+            font-size: 15px;
+        }
+
+        .ai-msg {
+            margin: 8px 0;
+        }
+
+        .ai-user {
+            color: #7366bd;
+            font-weight: 600;
+        }
+
+        .ai-bot {
+            color: #43c6ac;
+        }
+
+        #ai-chat-input {
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        #ai-chat-input input {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 0 0 0 10px;
+            font-size: 15px;
+        }
+
+        #ai-chat-input button {
+            border-radius: 0 0 10px 0;
+            background: #7366bd;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            font-size: 15px;
+            cursor: pointer;
+        }
     </style>
-    <script>
-    // Show/hide AI Chatbot
-    function toggleAIChatbot() {
-        var chat = document.getElementById('ai-chatbot');
-        chat.classList.toggle('open');
-    }
-    function removeSellerName(code) {
-        if(confirm('Remove seller name for code ' + code + '?')) {
-            fetch(`/api/admin/seller-names/${code}`, { method: 'DELETE' })
-                .then(() => location.reload());
+    <script defer>
+        // Show/hide AI Chatbot
+        function toggleAIChatbot() {
+            var chat = document.getElementById('ai-chatbot');
+            chat.classList.toggle('open');
         }
-    }
-    function removeSellerCode(code) {
-        if(confirm('Remove seller code ' + code + '?')) {
-            fetch(`/api/admin/seller-codes/${code}`, { method: 'DELETE' })
-                .then(() => location.reload());
-        }
-    }
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    }
-    window.onload = function() {
-        if(localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-        }
-    }
-    </script>
-    <script>
-    // AI Chatbot logic
-    function appendMessage(sender, text) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'ai-msg ai-' + sender;
-        msgDiv.textContent = (sender === 'user' ? 'You: ' : 'AI: ') + text;
-        document.getElementById('ai-chat-messages').appendChild(msgDiv);
-        document.getElementById('ai-chat-messages').scrollTop = 9999;
-    }
-    function sendAIMessage() {
-        const input = document.getElementById('ai-chat-input-box');
-        const text = input.value.trim();
-        if (!text) return;
-        appendMessage('user', text);
-        input.value = '';
-        fetch('/ask_ai', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question: text })
-        })
-        .then(r => r.json())
-        .then(data => {
-            appendMessage('bot', data.answer);
-        })
-        .catch(() => appendMessage('bot', 'Sorry, there was an error.'));
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('ai-chatbot-icon').onclick = toggleAIChatbot;
-        const aiInput = document.getElementById('ai-chat-input-box');
-        aiInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') sendAIMessage();
-        });
-        document.getElementById('ai-chat-send-btn').onclick = sendAIMessage;
-        // Dark mode for chatbot
-        if(localStorage.getItem('darkMode') === 'true') {
-            document.getElementById('ai-chatbot').classList.add('dark-mode');
-        }
-        document.body.addEventListener('click', function() {
-            if(localStorage.getItem('darkMode') === 'true') {
-                document.getElementById('ai-chatbot').classList.add('dark-mode');
-            } else {
-                document.getElementById('ai-chatbot').classList.remove('dark-mode');
+        function removeSellerName(code) {
+            if (confirm('Remove seller name for code ' + code + '?')) {
+                fetch(`/api/admin/seller-names/${code}`, { method: 'DELETE' })
+                    .then(() => location.reload());
             }
+        }
+        function removeSellerCode(code) {
+            if (confirm('Remove seller code ' + code + '?')) {
+                fetch(`/api/admin/seller-codes/${code}`, { method: 'DELETE' })
+                    .then(() => location.reload());
+            }
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        // AI Chatbot logic with robust streaming and persistent chat history
+        }
+        window.onload = function () {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+        }
+    </script>
+    <script defer>
+        // AI Chatbot logic with persistent chat history
+        function saveChatHistory() {
+            const messages = Array.from(document.getElementById('ai-chat-messages').children).map(div => div.textContent);
+            localStorage.setItem('aiChatHistory', JSON.stringify(messages));
+        }
+        function loadChatHistory() {
+            const messages = JSON.parse(localStorage.getItem('aiChatHistory') || '[]');
+            const chatMessages = document.getElementById('ai-chat-messages');
+            chatMessages.innerHTML = '';
+            messages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = msg.startsWith('You:') ? 'ai-msg ai-user' : 'ai-msg ai-bot';
+                msgDiv.textContent = msg;
+                chatMessages.appendChild(msgDiv);
+            });
+        }
+        function appendMessage(sender, text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'ai-msg ai-' + sender;
+            msgDiv.textContent = (sender === 'user' ? 'You: ' : 'AI: ') + text;
+            document.getElementById('ai-chat-messages').appendChild(msgDiv);
+            document.getElementById('ai-chat-messages').scrollTop = 9999;
+            saveChatHistory();
+        }
+        function sendAIMessage() {
+            const input = document.getElementById('ai-chat-input-box');
+            const text = input.value.trim();
+            if (!text) return;
+            appendMessage('user', text);
+            input.value = '';
+            const chatMessages = document.getElementById('ai-chat-messages');
+            let botMsgDiv = document.createElement('div');
+            botMsgDiv.className = 'ai-msg ai-bot';
+            botMsgDiv.textContent = 'AI: ';
+            chatMessages.appendChild(botMsgDiv);
+            saveChatHistory();
+            fetch('/ask_ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: text })
+            })
+                .then(response => {
+                    const reader = response.body.getReader();
+                    let decoder = new TextDecoder();
+                    function readChunk() {
+                        return reader.read().then(({ done, value }) => {
+                            if (done) {
+                                saveChatHistory();
+                                return;
+                            }
+                            let chunk = decoder.decode(value);
+                            if (chunk && chunk !== 'data: END\n\n') {
+                                let word = chunk.replace(/^data: /, '').replace(/\n\n$/, '');
+                                botMsgDiv.textContent += word + ' ';
+                                chatMessages.scrollTop = 9999;
+                                saveChatHistory();
+                            }
+                            return readChunk();
+                        });
+                    }
+                    return readChunk();
+                })
+                .catch(() => { botMsgDiv.textContent += 'Sorry, there was an error with the new AI assistant.'; saveChatHistory(); });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('ai-chatbot-icon').onclick = toggleAIChatbot;
+            const aiInput = document.getElementById('ai-chat-input-box');
+            aiInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') sendAIMessage();
+            });
+            document.getElementById('ai-chat-send-btn').onclick = sendAIMessage;
+            // Dark mode for chatbot
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.getElementById('ai-chatbot').classList.add('dark-mode');
+            }
+            document.body.addEventListener('click', function () {
+                if (localStorage.getItem('darkMode') === 'true') {
+                    document.getElementById('ai-chatbot').classList.add('dark-mode');
+                } else {
+                    document.getElementById('ai-chatbot').classList.remove('dark-mode');
+                }
+            });
+            // Load chat history on page load
+            loadChatHistory();
         });
-    });
     </script>
 </head>
+
 <body>
     <div id="ai-chatbot-icon" title="Ask Begonia AI">
         <svg viewBox="0 0 32 32">
-            <circle cx="16" cy="16" r="16" fill="#ff4fa3"/>
-            <ellipse cx="16" cy="20" rx="8" ry="4" fill="#fff"/>
-            <circle cx="12" cy="14" r="2" fill="#fff"/>
-            <circle cx="20" cy="14" r="2" fill="#fff"/>
-            <rect x="10" y="23" width="12" height="2" rx="1" fill="#fff"/>
+            <circle cx="16" cy="16" r="16" fill="#ff4fa3" />
+            <ellipse cx="16" cy="20" rx="8" ry="4" fill="#fff" />
+            <circle cx="12" cy="14" r="2" fill="#fff" />
+            <circle cx="20" cy="14" r="2" fill="#fff" />
+            <rect x="10" y="23" width="12" height="2" rx="1" fill="#fff" />
         </svg>
     </div>
     <div class="container">
         <!-- AI Chatbot Widget -->
-        <div id="ai-chatbot" class="">
-            <div id="ai-chat-header">Ask Begonia AI</div>
-            <div id="ai-chat-messages">
-                <div class="ai-msg ai-bot">AI: Hi! Ask me about your tokens, stalls, or donations.</div>
-            </div>
-            <div id="ai-chat-input">
-                <input id="ai-chat-input-box" type="text" placeholder="Type your question..." autocomplete="off" />
-                <button id="ai-chat-send-btn">Send</button>
-            </div>
-        </div>
         <button onclick="toggleDarkMode()" style="float:right; margin-bottom:10px;">Toggle Dark Mode</button>
         <h1>Dashboard</h1>
         <div class="info">
@@ -185,40 +444,44 @@
         {% if sellername_success %}<div class="msg-success">{{ sellername_success }}</div>{% endif %}
         {% if sellername_error %}<div class="msg-error">{{ sellername_error }}</div>{% endif %}
         {% if user.role == 'buyer' %}
-            <div class="tickets">🎟️ Tickets: {{ user.tickets or 0 }}</div>
-            <div class="actions">
-                <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
-            </div>
-            <div class="section">
-                <form method="post" action="{{ url_for('spend_tickets') }}">
-                    <input type="text" name="code" placeholder="Seller Code" required>
-                    <input type="number" name="amount" placeholder="Amount" min="1" required>
-                    <button type="submit">Spend Tickets</button>
-                </form>
-            </div>
+        <div class="tickets">🎟️ Tickets: {{ user.tickets or 0 }}</div>
+        <div class="actions">
+            <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
+        </div>
+        <div class="section">
+            <form method="post" action="{{ url_for('spend_tickets') }}">
+                <input type="text" name="code" placeholder="Seller Code" required>
+                <input type="number" name="amount" placeholder="Amount" min="1" required>
+                <button type="submit">Spend Tickets</button>
+            </form>
+        </div>
         {% elif user.role == 'seller' %}
-            <div class="tickets">💰 Tickets earned: {{ user.tickets or 0 }}</div>
-            <div class="actions">
-                <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
-            </div>
+        <div class="tickets">💰 Tickets earned: {{ user.tickets or 0 }}</div>
+        <div class="actions">
+            <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
+        </div>
         {% elif user.role == 'admin' %}
         <div class="dashboard-grid">
             <div class="section">
                 <h3>Seller Names & Codes</h3>
                 <div id="seller-names">
                     {% if seller_names %}
-                        <table>
-                            <tr><th>Seller Code</th><th>Seller Name</th><th>Remove</th></tr>
-                            {% for code, name in seller_names.items() %}
-                                <tr>
-                                    <td>{{ code }}</td>
-                                    <td>{{ name }}</td>
-                                    <td><button onclick="removeSellerName('{{ code }}')">Remove</button></td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+                    <table>
+                        <tr>
+                            <th>Seller Code</th>
+                            <th>Seller Name</th>
+                            <th>Remove</th>
+                        </tr>
+                        {% for code, name in seller_names.items() %}
+                        <tr>
+                            <td>{{ code }}</td>
+                            <td>{{ name }}</td>
+                            <td><button onclick="removeSellerName('{{ code }}')">Remove</button></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
                     {% else %}
-                        <p>No seller names available.</p>
+                    <p>No seller names available.</p>
                     {% endif %}
                 </div>
                 <h3 style="margin-top:24px;">Remove Seller Code</h3>
@@ -249,20 +512,39 @@
                 </form>
                 <h3 style="margin-top:24px;">Seller Earnings</h3>
                 <div id="seller-earnings">
-                    {% if seller_earnings %}
-                        <table>
-                            <tr><th>Seller Name</th><th>Code</th><th>Earnings</th></tr>
-                            {% for seller in seller_earnings %}
-                                <tr>
-                                    <td>{{ seller.name }}</td>
-                                    <td>{{ seller.code }}</td>
-                                    <td>{{ seller.earnings }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
-                    {% else %}
-                        <p>No seller earnings data available.</p>
-                    {% endif %}
+                    <table id="logs-table">
+                        <tr>
+                            <th>Seller Name</th>
+                            <th>Code</th>
+                            <th>Earnings</th>
+                        </tr>
+                    </table>
+                    <button id="load-more-logs" style="margin-top:10px;">Load More</button>
+                    <script defer>
+                        let logsPage = 1;
+                        const logsLimit = 20;
+                        async function loadLogs() {
+                            const res = await fetch(`/api/admin/logs?page=${logsPage}&limit=${logsLimit}`);
+                            const data = await res.json();
+                            const table = document.getElementById('logs-table');
+                            data.logs.forEach(log => {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `<td>${log.sellerName || ''}</td><td>${log.code || ''}</td><td>${log.earnings || log.amount || ''}</td>`;
+                                table.appendChild(tr);
+                            });
+                            if ((logsPage * logsLimit) >= data.total) {
+                                document.getElementById('load-more-logs').style.display = 'none';
+                            } else {
+                                document.getElementById('load-more-logs').style.display = 'block';
+                            }
+                        }
+                        document.getElementById('load-more-logs').onclick = function () {
+                            logsPage++;
+                            loadLogs();
+                        };
+                        // Initial load
+                        loadLogs();
+                    </script>
                 </div>
             </div>
         </div>
@@ -273,4 +555,5 @@
         </div>
     </div>
 </body>
+
 </html>
