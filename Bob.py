@@ -4,9 +4,6 @@ import os
 import time
 
 
-
-
-
 def start_backend():
     print('Starting Node.js backend...')
     backend_dir = os.path.join(os.getcwd(), 'backend')

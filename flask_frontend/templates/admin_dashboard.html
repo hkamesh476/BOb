@@ -1,62 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard - Bank of Begonia</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #87CEEB; margin: 0; padding: 0; min-height: 100vh; transition: background 0.3s, color 0.3s; }
-        .container { max-width: 1200px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px #43c6ac55; padding: 32px; }
-        h1 { color: #7366bd; margin-bottom: 24px; }
-        .info { font-size: 20px; margin-bottom: 24px; }
-        .dashboard-grid { display: flex; flex-wrap: wrap; gap: 24px; }
-        .section { flex: 1 1 350px; background: #f5f6fa; border-radius: 8px; padding: 18px 16px; box-shadow: 0 2px 8px #43c6ac22; min-width: 350px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px 6px; text-align: left; border-bottom: 1px solid #e0e0e0; }
-        th { background: #7366bd; color: #fff; }
-        .btn, button { display: inline-block; margin: 8px 4px; padding: 8px 18px; border-radius: 6px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; background: #7366bd; color: #fff; }
-        .btn-logout { background: #f7786b; }
-        .btn:hover, button:hover { opacity: 0.9; }
-        .msg-success { color: #43c6ac; font-weight: 500; margin-bottom: 8px; }
-        .msg-error { color: #f7786b; font-weight: 500; margin-bottom: 8px; }
-        .actions { margin: 16px 0; }
-        .tickets { font-size: 22px; color: #43c6ac; font-weight: bold; margin-bottom: 16px; }
-        form { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-        input[type="text"], input[type="number"] { padding: 8px; border-radius: 6px; border: 1px solid #ccc; font-size: 15px; outline: none; transition: border 0.2s; width: 90%; max-width: 260px; }
-        input[type="text"]:focus, input[type="number"]:focus { border: 1.5px solid #7366bd; }
-        body.dark-mode { background: #181a1b; color: #e0e0e0; }
-        body.dark-mode .container { background: #23272b; color: #e0e0e0; }
-        body.dark-mode .section { background: #23272b; }
-        body.dark-mode th { background: #22223b; color: #fff; }
-        body.dark-mode .btn, body.dark-mode button { background: #22223b; color: #fff; }
-        body.dark-mode .btn-logout { background: #c0392b; }
-        body.dark-mode input, body.dark-mode input:focus, body.dark-mode input[type="number"]:focus { background: #23272b; color: #e0e0e0; border: 1px solid #444; }
-        @media (max-width: 900px) { .dashboard-grid { flex-direction: column; } .section { min-width: unset; } }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #87CEEB;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px #43c6ac55;
+            padding: 32px;
+        }
+
+        h1 {
+            color: #7366bd;
+            margin-bottom: 24px;
+        }
+
+        .info {
+            font-size: 20px;
+            margin-bottom: 24px;
+        }
+
+        .dashboard-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .section {
+            flex: 1 1 350px;
+            background: #f5f6fa;
+            border-radius: 8px;
+            padding: 18px 16px;
+            box-shadow: 0 2px 8px #43c6ac22;
+            min-width: 350px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px 6px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #7366bd;
+            color: #fff;
+        }
+
+        .btn,
+        button {
+            display: inline-block;
+            margin: 8px 4px;
+            padding: 8px 18px;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            background: #7366bd;
+            color: #fff;
+        }
+
+        .btn-logout {
+            background: #f7786b;
+        }
+
+        .btn:hover,
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .msg-success {
+            color: #43c6ac;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .msg-error {
+            color: #f7786b;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .actions {
+            margin: 16px 0;
+        }
+
+        .tickets {
+            font-size: 22px;
+            color: #43c6ac;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            outline: none;
+            transition: border 0.2s;
+            width: 90%;
+            max-width: 260px;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border: 1.5px solid #7366bd;
+        }
+
+        body.dark-mode {
+            background: #181a1b;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .container {
+            background: #23272b;
+            color: #e0e0e0;
+        }
+
+        body.dark-mode .section {
+            background: #23272b;
+        }
+
+        body.dark-mode th {
+            background: #22223b;
+            color: #fff;
+        }
+
+        body.dark-mode .btn,
+        body.dark-mode button {
+            background: #22223b;
+            color: #fff;
+        }
+
+        body.dark-mode .btn-logout {
+            background: #c0392b;
+        }
+
+        body.dark-mode input,
+        body.dark-mode input:focus,
+        body.dark-mode input[type="number"]:focus {
+            background: #23272b;
+            color: #e0e0e0;
+            border: 1px solid #444;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-grid {
+                flex-direction: column;
+            }
+
+            .section {
+                min-width: unset;
+            }
+        }
     </style>
     // AI Chatbot logic with robust streaming and persistent chat history
     // Existing admin dashboard logic
     function removeSellerName(code) {
-        if(confirm('Remove seller name for code ' + code + '?')) {
-            fetch(`/api/admin/seller-names/${code}`, { method: 'DELETE' })
-                .then(() => location.reload());
-        }
+    if(confirm('Remove seller name for code ' + code + '?')) {
+    fetch(`/api/admin/seller-names/${code}`, { method: 'DELETE' })
+    .then(() => location.reload());
+    }
     }
     function removeSellerCode(code) {
-        if(confirm('Remove seller code ' + code + '?')) {
-            fetch(`/api/admin/seller-codes/${code}`, { method: 'DELETE' })
-                .then(() => location.reload());
-        }
+    if(confirm('Remove seller code ' + code + '?')) {
+    fetch(`/api/admin/seller-codes/${code}`, { method: 'DELETE' })
+    .then(() => location.reload());
+    }
     }
     function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     }
     window.onload = function() {
-        if(localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-        }
+    if(localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    }
     }
     </script>
 </head>
+
 <body>
     <div id="ai-chatbot-icon" title="Ask Begonia AI">
         <svg viewBox="0 0 32 32">
@@ -84,18 +236,22 @@
                 <h3>Seller Names & Codes</h3>
                 <div id="seller-names">
                     {% if seller_names %}
-                        <table>
-                            <tr><th>Seller Code</th><th>Seller Name</th><th>Remove</th></tr>
-                            {% for code, name in seller_names.items() %}
-                                <tr>
-                                    <td>{{ code }}</td>
-                                    <td>{{ name }}</td>
-                                    <td><button onclick="removeSellerName('{{ code }}')">Remove</button></td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+                    <table>
+                        <tr>
+                            <th>Seller Code</th>
+                            <th>Seller Name</th>
+                            <th>Remove</th>
+                        </tr>
+                        {% for code, name in seller_names.items() %}
+                        <tr>
+                            <td>{{ code }}</td>
+                            <td>{{ name }}</td>
+                            <td><button onclick="removeSellerName('{{ code }}')">Remove</button></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
                     {% else %}
-                        <p>No seller names available.</p>
+                    <p>No seller names available.</p>
                     {% endif %}
                 </div>
                 <h3 style="margin-top:24px;">Remove Seller Code</h3>
@@ -127,18 +283,22 @@
                 <h3 style="margin-top:24px;">Seller Earnings</h3>
                 <div id="seller-earnings">
                     {% if seller_earnings %}
-                        <table>
-                            <tr><th>Seller Name</th><th>Code</th><th>Earnings</th></tr>
-                            {% for seller in seller_earnings %}
-                                <tr>
-                                    <td>{{ seller.name }}</td>
-                                    <td>{{ seller.code }}</td>
-                                    <td>{{ seller.earnings }}</td>
-                                </tr>
-                            {% endfor %}
-                        </table>
+                    <table>
+                        <tr>
+                            <th>Seller Name</th>
+                            <th>Code</th>
+                            <th>Earnings</th>
+                        </tr>
+                        {% for seller in seller_earnings %}
+                        <tr>
+                            <td>{{ seller.name }}</td>
+                            <td>{{ seller.code }}</td>
+                            <td>{{ seller.earnings }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
                     {% else %}
-                        <p>No seller earnings data available.</p>
+                    <p>No seller earnings data available.</p>
                     {% endif %}
                 </div>
             </div>
@@ -149,4 +309,5 @@
         </div>
     </div>
 </body>
+
 </html>

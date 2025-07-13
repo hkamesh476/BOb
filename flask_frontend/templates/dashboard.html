@@ -323,7 +323,7 @@
         }
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
-        // AI Chatbot logic with robust streaming and persistent chat history
+            // AI Chatbot logic with robust streaming and persistent chat history
         }
         window.onload = function () {
             if (localStorage.getItem('darkMode') === 'true') {
@@ -545,7 +545,7 @@
                             loadLogs();
                         };
                         // Lazy load logs only when user clicks 'Load More' the first time
-                        document.getElementById('load-more-logs').addEventListener('click', function() {
+                        document.getElementById('load-more-logs').addEventListener('click', function () {
                             if (!logsLoaded) {
                                 loadLogs();
                             }

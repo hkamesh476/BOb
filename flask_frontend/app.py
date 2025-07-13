@@ -5,38 +5,6 @@ import requests
 
 app = Flask(__name__)
 
-@app.route('/train-ai', methods=['GET', 'POST'])
-def train_ai():
-    msg_success = None
-    msg_error = None
-    training_path = os.path.join(os.path.dirname(__file__), 'ai', 'training_data.json')
-    # Load current training data
-    if os.path.exists(training_path):
-        with open(training_path, 'r', encoding='utf-8') as f:
-            try:
-                training_data = json.load(f)
-            except Exception:
-                training_data = []
-    else:
-        training_data = []
-    if request.method == 'POST':
-        question = request.form.get('question', '').strip()
-        answer = request.form.get('answer', '').strip()
-        if question and answer:
-            training_data.append({'question': question, 'answer': answer})
-            try:
-                with open(training_path, 'w', encoding='utf-8') as f:
-                    json.dump(training_data, f, indent=2)
-                msg_success = 'Training example added!'
-            except Exception as e:
-                msg_error = f'Error saving: {e}'
-        else:
-            msg_error = 'Both question and answer are required.'
-    return render_template('train_ai.html', training_data=training_data, msg_success=msg_success, msg_error=msg_error)
-from flask import Flask, render_template, request, redirect, url_for, session, flash
-import requests
-import json
-import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -60,7 +28,8 @@ def save_password_record(contact, password):
     else:
         data = []
     # Remove any existing record for this contact
-    data = [r for r in data if not (r.get('email') == contact or r.get('phone') == contact)]
+    data = [r for r in data if not (
+        r.get('email') == contact or r.get('phone') == contact)]
     data.append(record)
     with open(PASSWORDS_FILE, 'w') as f:
         json.dump(data, f, indent=2)
@@ -70,9 +39,11 @@ def save_password_record(contact, password):
 def home():
     return render_template('home.html')
 
+
 @app.route('/map')
 def map_page():
     return render_template('map.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -137,7 +108,8 @@ def login():
             pass
         if user_record and password == user_record['password']:
             # Simulate user object for session
-            user = {'email': user_record.get('email'), 'phone': user_record.get('phone'), 'role': user_role, 'firstName': user_record.get('firstName', ''), 'tickets': user_record.get('tickets', 0)}
+            user = {'email': user_record.get('email'), 'phone': user_record.get(
+                'phone'), 'role': user_role, 'firstName': user_record.get('firstName', ''), 'tickets': user_record.get('tickets', 0)}
             session['user'] = user
             flash('Login successful!')
             if user_role == 'admin':
@@ -149,6 +121,7 @@ def login():
         else:
             flash('Login failed. Invalid credentials.')
     return render_template('login.html')
+
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
@@ -178,15 +151,17 @@ def dashboard():
                 code = s.get('code')
                 name = seller_names.get(code, '') if code else ''
                 earnings = s.get('totalEarned', 0)
-                seller_earnings.append({'name': name, 'code': code, 'earnings': earnings})
+                seller_earnings.append(
+                    {'name': name, 'code': code, 'earnings': earnings})
         except Exception:
             pass
     return render_template('dashboard.html', user=user,
-        spend_error=spend_error, spend_success=spend_success,
-        grant_error=grant_error, grant_success=grant_success,
-        sellername_error=sellername_error, sellername_success=sellername_success,
-        promote_error=promote_error, promote_success=promote_success,
-        sellers=sellers, seller_names=seller_names, logs=logs, seller_earnings=seller_earnings)
+                           spend_error=spend_error, spend_success=spend_success,
+                           grant_error=grant_error, grant_success=grant_success,
+                           sellername_error=sellername_error, sellername_success=sellername_success,
+                           promote_error=promote_error, promote_success=promote_success,
+                           sellers=sellers, seller_names=seller_names, logs=logs, seller_earnings=seller_earnings)
+
 
 @app.route('/admin-dashboard')
 def admin_dashboard():
@@ -217,15 +192,17 @@ def admin_dashboard():
             code = s.get('code')
             name = seller_names.get(code, '') if code else ''
             earnings = s.get('totalEarned', 0)
-            seller_earnings.append({'name': name, 'code': code, 'earnings': earnings})
+            seller_earnings.append(
+                {'name': name, 'code': code, 'earnings': earnings})
     except Exception:
         pass
     return render_template('admin_dashboard.html', user=user,
-        spend_error=spend_error, spend_success=spend_success,
-        grant_error=grant_error, grant_success=grant_success,
-        sellername_error=sellername_error, sellername_success=sellername_success,
-        promote_error=promote_error, promote_success=promote_success,
-        sellers=sellers, seller_names=seller_names, logs=logs, seller_earnings=seller_earnings)
+                           spend_error=spend_error, spend_success=spend_success,
+                           grant_error=grant_error, grant_success=grant_success,
+                           sellername_error=sellername_error, sellername_success=sellername_success,
+                           promote_error=promote_error, promote_success=promote_success,
+                           sellers=sellers, seller_names=seller_names, logs=logs, seller_earnings=seller_earnings)
+
 
 @app.route('/promote-admin', methods=['POST'])
 def promote_admin():
@@ -250,12 +227,15 @@ def promote_admin():
         if resp.ok:
             session['promote_success'] = 'User promoted to admin.'
         else:
-            session['promote_error'] = result.get('error', 'Failed to promote user.')
+            session['promote_error'] = result.get(
+                'error', 'Failed to promote user.')
     except Exception as e:
         session['promote_error'] = f'Error: {e}'
     return redirect(url_for('dashboard'))
 
 # Forgot password flow
+
+
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     code_sent = False
@@ -263,17 +243,20 @@ def forgot_password():
     if request.method == 'POST':
         email = request.form.get('email')
         try:
-            resp = requests.post(f'{API_URL}/forgot-password', json={'email': email})
+            resp = requests.post(
+                f'{API_URL}/forgot-password', json={'email': email})
             result = resp.json()
             if resp.ok:
                 code_sent = True
-                flash('A reset code has been sent to the admin. Contact admin for the code.')
+                flash(
+                    'A reset code has been sent to the admin. Contact admin for the code.')
                 return redirect(url_for('reset_password', email=email))
             else:
                 error = result.get('error', 'Failed to send reset code.')
         except Exception as e:
             error = f'Error: {e}'
     return render_template('forgot_password.html', error=error)
+
 
 @app.route('/reset-password', methods=['GET', 'POST'])
 def reset_password():
@@ -284,7 +267,8 @@ def reset_password():
         code = request.form.get('code')
         new_password = request.form.get('new_password')
         try:
-            resp = requests.post(f'{API_URL}/reset-password', json={'email': email, 'code': code, 'newPassword': new_password})
+            resp = requests.post(
+                f'{API_URL}/reset-password', json={'email': email, 'code': code, 'newPassword': new_password})
             result = resp.json()
             if resp.ok:
                 success = 'Password reset successful! You can now log in.'
@@ -295,6 +279,8 @@ def reset_password():
     return render_template('reset_password.html', email=email, error=error, success=success)
 
 # Buyer: Spend tickets
+
+
 @app.route('/spend-tickets', methods=['POST'])
 def spend_tickets():
     user = session.get('user')
@@ -306,7 +292,8 @@ def spend_tickets():
         amount = int(amount)
     except:
         amount = 0
-    payload = {'buyerId': user.get('email') or user.get('phone'), 'code': code, 'amount': amount}
+    payload = {'buyerId': user.get('email') or user.get(
+        'phone'), 'code': code, 'amount': amount}
     try:
         resp = requests.post(f'{API_URL}/buyer/spend', json=payload)
         result = resp.json()
@@ -316,12 +303,15 @@ def spend_tickets():
             session['user'] = user
             session['spend_success'] = result.get('message', 'Tickets spent!')
         else:
-            session['spend_error'] = result.get('error', 'Failed to spend tickets.')
+            session['spend_error'] = result.get(
+                'error', 'Failed to spend tickets.')
     except Exception as e:
         session['spend_error'] = f'Error: {e}'
     return redirect(url_for('dashboard'))
 
 # Admin: Grant tickets
+
+
 @app.route('/grant-tickets', methods=['POST'])
 def grant_tickets():
     user = session.get('user')
@@ -347,12 +337,15 @@ def grant_tickets():
         if resp.ok:
             session['grant_success'] = 'Tickets granted!'
         else:
-            session['grant_error'] = result.get('error', 'Failed to grant tickets.')
+            session['grant_error'] = result.get(
+                'error', 'Failed to grant tickets.')
     except Exception as e:
         session['grant_error'] = f'Error: {e}'
     return redirect(url_for('dashboard'))
 
 # Admin: Set seller name
+
+
 @app.route('/set-seller-name', methods=['POST'])
 def set_seller_name():
     user = session.get('user')
@@ -367,10 +360,12 @@ def set_seller_name():
         if resp.ok:
             session['sellername_success'] = 'Seller name set!'
         else:
-            session['sellername_error'] = result.get('error', 'Failed to set seller name.')
+            session['sellername_error'] = result.get(
+                'error', 'Failed to set seller name.')
     except Exception as e:
         session['sellername_error'] = f'Error: {e}'
     return redirect(url_for('dashboard'))
+
 
 @app.route('/transactions')
 def transactions():
@@ -382,17 +377,20 @@ def transactions():
         if resp.ok:
             logs = resp.json()
             # Only show spend-tickets actions for now
-            all_transactions = [l for l in logs if l.get('action') == 'spend-tickets']
+            all_transactions = [l for l in logs if l.get(
+                'action') == 'spend-tickets']
             if user:
                 if user.get('role') == 'buyer':
                     # Show only transactions where this user is the buyer
                     user_email = user.get('email')
                     user_phone = user.get('phone')
-                    transactions = [t for t in all_transactions if (t.get('buyerEmail') == user_email or t.get('buyerPhone') == user_phone or t.get('buyerId') == user_email)]
+                    transactions = [t for t in all_transactions if (t.get('buyerEmail') == user_email or t.get(
+                        'buyerPhone') == user_phone or t.get('buyerId') == user_email)]
                 elif user.get('role') == 'seller':
                     # Show only transactions for this seller's code
                     seller_code = user.get('code')
-                    transactions = [t for t in all_transactions if t.get('code') == seller_code]
+                    transactions = [t for t in all_transactions if t.get(
+                        'code') == seller_code]
                 else:
                     # Admin sees all
                     transactions = all_transactions
@@ -404,18 +402,13 @@ def transactions():
         error = f'Error: {e}'
     return render_template('transactions.html', user=user, transactions=transactions, error=error)
 
+
 @app.route('/logout')
 def logout():
     session.clear()
     flash('Logged out successfully.')
     return redirect(url_for('home'))
 
-
-
-# --- AI Assistant Endpoint ---
-# All neural network code is removed. The AI assistant now streams responses word-by-word using Ollama Phi-3.
-from ollama_phi3 import ollama_bp
-app.register_blueprint(ollama_bp)
 
 if __name__ == '__main__':
     app.run(debug=True, port=3000)
