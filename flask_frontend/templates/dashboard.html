@@ -523,6 +523,7 @@
                     <script defer>
                         let logsPage = 1;
                         const logsLimit = 20;
+                        let logsLoaded = false;
                         async function loadLogs() {
                             const res = await fetch(`/api/admin/logs?page=${logsPage}&limit=${logsLimit}`);
                             const data = await res.json();
@@ -532,6 +533,7 @@
                                 tr.innerHTML = `<td>${log.sellerName || ''}</td><td>${log.code || ''}</td><td>${log.earnings || log.amount || ''}</td>`;
                                 table.appendChild(tr);
                             });
+                            logsLoaded = true;
                             if ((logsPage * logsLimit) >= data.total) {
                                 document.getElementById('load-more-logs').style.display = 'none';
                             } else {
@@ -542,8 +544,12 @@
                             logsPage++;
                             loadLogs();
                         };
-                        // Initial load
-                        loadLogs();
+                        // Lazy load logs only when user clicks 'Load More' the first time
+                        document.getElementById('load-more-logs').addEventListener('click', function() {
+                            if (!logsLoaded) {
+                                loadLogs();
+                            }
+                        }, { once: true });
                     </script>
                 </div>
             </div>

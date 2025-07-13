@@ -2,6 +2,7 @@
   <img src="flask_frontend/static/BOB picture.png" alt="Bank of Begonia Logo" width="180" />
 </p>
 
+
 # Bank of Begonia
 
 A ticket-based mini banking system for carnivals and events. Built with Node.js, Express, and Flask (UI).
@@ -13,22 +14,15 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 
 ## Features
 
-- 🎫 Digital ticket management system
-- 👥 Multi-user support (Admin, Sellers, Buyers)
-- 🔒 Secure seller approval system
-- 🎯 Unique 2-character seller codes
-- 💳 Real-time ticket transactions
-- 📊 Transaction logging and monitoring
-- ⚡ Real-time updates via WebSocket
-- 📝 Admin can assign custom seller names
-- 🟣 Modern, mobile-friendly UI (Flask)
+ 🚀 Lazy loading and async data fetching for faster performance
 
 ## Demo Accounts
-
-- **Admin**: admin@example.com / adminpass1
-
-
-## Quick Start
+ Use async file operations in backend for non-blocking I/O
+ Use lazy loading and async fetch for logs, transactions, and images in the frontend for speed
+ Add input validation and sanitization for all API endpoints
+ Replace JSON file storage with a database for scalability
+ Implement password hashing for security
+ Use HTTPS and proper session management in production
 
 ### Prerequisites
 
@@ -36,7 +30,8 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 - npm >= 6.0.0
 - Python 3.8+
 
-### Installation
+
+All AI/chatbot and unnecessary scripts have been deleted for a clean workspace.
 
 1. Clone the repository:
    ```bash
@@ -56,7 +51,7 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
    pip install -r requirements.txt  # or pip install flask requests
    ```
 
-### Running the Application
+*
 
 1. Start the backend server (in the backend directory):
    ```bash
@@ -69,6 +64,8 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
    python app.py
    ```
    Flask UI will run on http://127.0.0.1:3000
+
+
 
 ## Usage Guide
 
@@ -91,6 +88,7 @@ A ticket-based mini banking system for carnivals and events. Built with Node.js,
 - Transfer tickets to sellers
 
 
+
 ## Directory Structure
 
 ```
@@ -110,12 +108,14 @@ bank-of-begonia/
     └── sellerNames.json # Seller code display names
 ```
 
+
 All backup and deleted folders have been removed for a clean workspace.
 ## Troubleshooting
 
 - If you see CORS errors or cannot connect, make sure you are using `http://127.0.0.1` (not `localhost`) in both backend and frontend.
 - Only one frontend (React or Flask) can run on port 3000 at a time.
 - If you get an error about a port being in use, stop the other server or change the port.
+
 
 
 
@@ -126,6 +126,9 @@ All backup and deleted folders have been removed for a clean workspace.
 - **Storage**: JSON files (easily replaceable with a database)
 - **Real-time**: WebSocket for live updates
 
+**No AI/chatbot or LLM features included.**
+
+
 ## Optimization & Recommendations
 
 - Use async file operations in backend for non-blocking I/O
@@ -133,7 +136,6 @@ All backup and deleted folders have been removed for a clean workspace.
 - Replace JSON file storage with a database for scalability
 - Implement password hashing for security
 - Use HTTPS and proper session management in production
-- Optimize React state updates and use memoization/hooks where possible
 
 
 ## Security Note

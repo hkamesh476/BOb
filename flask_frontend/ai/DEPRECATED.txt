@@ -1,1 +1,0 @@
-Files in this folder are deprecated and no longer used. All AI logic is now handled by Ollama Phi-3 (see ollama_phi3.py).
