@@ -131,11 +131,26 @@ All backup and deleted folders have been removed for a clean workspace.
 
 ## Optimization & Recommendations
 
-- Implement proper password hashing (currently passwords are stored in plain text)
-- Use a secure database instead of JSON files
-- Add input validation and sanitization
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+## Integration Tests
+
+### Flask (Python)
+To run integration tests for the Flask backend:
+```bash
+cd flask_frontend
+python testing.py
+```
+
+### React (Frontend)
+To run integration tests for the React frontend:
+```bash
+cd ui
+npm test
+```
+
+Integration tests cover key user flows and loading indicators for both backend and frontend.
 
 
 
